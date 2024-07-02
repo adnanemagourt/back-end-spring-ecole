@@ -1,12 +1,14 @@
 package com.example.back.repository;
 
+import com.example.back.DTO.DirecteurDTO;
 import com.example.back.entities.Directeur;
 import org.springframework.data.repository.CrudRepository;
 
 public interface DirecteurRepository extends CrudRepository<Directeur, Integer> {
-    Directeur findDirecteurByEmail(String email);
 
-    void updateById(Integer id, Directeur directeur);
+    DirecteurDTO findDirecteurByEmail(String email);
 
-    Iterable<Directeur> searchDirecteursByNom(String name);
+    Iterable<DirecteurDTO> searchDirecteursByNom(String name);
+
+    Iterable<DirecteurDTO> findBy();
 }

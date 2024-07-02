@@ -1,20 +1,18 @@
 package com.example.back.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
 @Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Table(name = "etudiant")
-public class Etudiant extends Personne {
+public class Etudiant {
 
     @Id
     @Column(name = "id")
@@ -42,8 +40,8 @@ public class Etudiant extends Personne {
     @Column(name = "telephone")
     public String telephone;
 
-    //@Column(name = "classe_id")
-    //private Integer classeId;
+    @ManyToMany(mappedBy = "etudiants")
+    public List<Matiere> matieres;
 
     @ManyToOne
     @JoinColumn(
@@ -52,8 +50,6 @@ public class Etudiant extends Personne {
     )
     public Classe classe;
 
-    //    public Integer getClasseId() { return classeId; }
 
-//    public void setClasseId(Integer classeId) { this.classeId = classeId; }
 
 }

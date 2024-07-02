@@ -1,17 +1,14 @@
 package com.example.back.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Table(name = "classe")
 public class Classe {
     @Setter
@@ -26,7 +23,7 @@ public class Classe {
     @Column(name = "nom")
     public String nom;
 
-    @OneToMany(mappedBy = "classes")
+    @OneToMany(mappedBy = "classe")
     public List<Etudiant> etudiants;
 
     @Getter

@@ -1,14 +1,15 @@
 package com.example.back.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Entity
 @NoArgsConstructor
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Table(name = "directeur")
-public class Directeur extends Personne {
+public class Directeur {
 
     @Id
     @Column(name = "id")
