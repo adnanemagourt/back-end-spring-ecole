@@ -2,12 +2,16 @@ package com.example.back.repository;
 
 import com.example.back.DTO.ClasseDTO;
 import com.example.back.entities.Classe;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-public interface ClasseRepository extends CrudRepository<Classe, Integer>{
+import java.util.List;
 
-    Iterable<ClasseDTO> searchClassesByNom(String name);
+public interface ClasseRepository extends JpaRepository<Classe, Integer> {
 
-    Iterable<ClasseDTO> findBy();
+    @Override
+    List<Classe> findAll();
 
+    List<Classe> findByNomContains(String nom);
 }

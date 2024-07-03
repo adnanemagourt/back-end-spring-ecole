@@ -2,13 +2,16 @@ package com.example.back.repository;
 
 import com.example.back.DTO.DirecteurDTO;
 import com.example.back.entities.Directeur;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 
-public interface DirecteurRepository extends CrudRepository<Directeur, Integer> {
+import java.util.List;
 
-    DirecteurDTO findDirecteurByEmail(String email);
+public interface DirecteurRepository extends JpaRepository<Directeur, Integer> {
 
-    Iterable<DirecteurDTO> searchDirecteursByNom(String name);
+    Directeur findDirecteurByEmail(String email);
 
-    Iterable<DirecteurDTO> findBy();
+    List<Directeur> findByNomContains(String name);
+
+    List<Directeur> findBy();
 }

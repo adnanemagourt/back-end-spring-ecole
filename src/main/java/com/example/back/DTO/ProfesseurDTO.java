@@ -1,5 +1,6 @@
 package com.example.back.DTO;
 
+import com.example.back.entities.Matiere;
 import com.example.back.entities.Professeur;
 import lombok.*;
 
@@ -44,7 +45,8 @@ public class ProfesseurDTO {
         this.motDePasse = professeur.getMotDePasse();
         this.adresse = professeur.getAdresse();
         this.telephone = professeur.getTelephone();
-        this.matiere_id = professeur.getMatiere().getId();
+        Matiere matiere = professeur.getMatiere();
+        this.matiere_id = matiere == null ? null : matiere.getId() ;
     }
 
 }

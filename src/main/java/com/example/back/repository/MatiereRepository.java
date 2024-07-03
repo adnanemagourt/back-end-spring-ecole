@@ -2,12 +2,15 @@ package com.example.back.repository;
 
 import com.example.back.DTO.MatiereDTO;
 import com.example.back.entities.Matiere;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 
-public interface MatiereRepository extends CrudRepository<Matiere, Integer> {
+import java.util.List;
 
-    Iterable<MatiereDTO> searchMatieresByNom(String name);
+public interface MatiereRepository extends JpaRepository<Matiere, Integer> {
 
-    Iterable<MatiereDTO> findBy();
+    List<Matiere> findByNomContains(String name);
+
+    List<Matiere> findBy();
 
 }

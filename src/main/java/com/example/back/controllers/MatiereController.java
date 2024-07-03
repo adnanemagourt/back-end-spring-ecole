@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
+@CrossOrigin()
 @RequestMapping(path = "/api/matiere")
 public class MatiereController {
 
@@ -18,24 +19,24 @@ public class MatiereController {
 
 
     // insert
-    @PutMapping(path = "/")
+    @PostMapping(path = "")
     public @ResponseBody ResponseEntity<String> addMatiere(@RequestBody Matiere matiere){
         return matiereServiceImpl.create(matiere) ? new ResponseEntity<>("Successful", HttpStatus.CREATED) : new ResponseEntity<>("Error in creation", HttpStatus.CONFLICT);
     }
 
     // update
 
-    @PostMapping(path = "/")
+    @PutMapping(path = "")
     public @ResponseBody ResponseEntity<String> updateMatiere(@RequestBody Matiere matiere){
         return matiereServiceImpl.update(matiere) ? new ResponseEntity<>("Successful", HttpStatus.OK) : new ResponseEntity<>("Error in update", HttpStatus.CONFLICT);
     }
 
     // get
 
-    @GetMapping(path = "/")
+    @GetMapping(path = "")
     public @ResponseBody ResponseEntity<Iterable<MatiereDTO>> getMatiere(){
         Iterable<MatiereDTO> matieres = matiereServiceImpl.readAll();
-        return matieres != null ? new ResponseEntity<>(matieres, HttpStatus.OK) : new ResponseEntity<>((Iterable<MatiereDTO>) null, HttpStatus.NOT_FOUND);
+        return matieres != null ? new ResponseEntity<>(matieres, HttpStatus.OK) : new ResponseEntity<>(matieres, HttpStatus.NOT_FOUND);
     }
 
     @GetMapping(path = "/id/{id}")

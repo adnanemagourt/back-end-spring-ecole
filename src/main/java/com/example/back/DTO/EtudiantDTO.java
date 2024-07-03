@@ -1,5 +1,6 @@
 package com.example.back.DTO;
 
+import com.example.back.entities.Classe;
 import com.example.back.entities.Etudiant;
 import lombok.*;
 import java.util.Date;
@@ -49,7 +50,8 @@ public class EtudiantDTO {
         this.dateNaissance = etudiant.getDateNaissance();
         this.adresse = etudiant.getAdresse();
         this.telephone = etudiant.getTelephone();
-        this.classe_id = etudiant.getClasse().getId();
+        Classe classe = etudiant.getClasse();
+        this.classe_id = classe == null ? null : classe.getId();
     }
 
 

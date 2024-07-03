@@ -1,5 +1,6 @@
 package com.example.back.services.Impl;
 
+import com.example.back.DTO.DTOListMapper;
 import com.example.back.DTO.EtudiantDTO;
 import com.example.back.entities.Etudiant;
 import com.example.back.repository.EtudiantRepository;
@@ -7,6 +8,7 @@ import com.example.back.services.EtudiantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,8 +27,8 @@ public class EtudiantServiceImpl implements EtudiantService {
     }
 
     @Override
-    public Iterable<EtudiantDTO> readAll() {
-        return etudiantRepository.findBy();
+    public List<EtudiantDTO> readAll() {
+        return DTOListMapper.mapEtudiant(etudiantRepository.findBy());
     }
 
     @Override
@@ -48,20 +50,22 @@ public class EtudiantServiceImpl implements EtudiantService {
     }
 
     @Override
-    public Iterable<EtudiantDTO> searchByNom(String nom) {
-        Iterable<EtudiantDTO> etudiants = etudiantRepository.searchEtudiantsByNom(nom);
-        return etudiants;
+    public List<EtudiantDTO> searchByNom(String nom) {
+        return DTOListMapper.mapEtudiant(etudiantRepository.findByNomContains(nom));
     }
 
     @Override
-    public Iterable<EtudiantDTO> getByClasseId(Integer classeId) {
-        Iterable<EtudiantDTO> etudiants = etudiantRepository.findEtudiantsByClasse_Id(classeId);
-        return etudiants;
+    public List<EtudiantDTO> getByClasseId(Integer classeId) {
+        return DTOListMapper.mapEtudiant(etudiantRepository.findEtudiantsByClasse_Id(classeId));
     }
 
     @Override
-    public Iterable<EtudiantDTO> getByProfesseurId(Integer professeurId) {
-        Iterable<EtudiantDTO> etudiants = etudiantRepository.getEtudiantsByProfesseurid(professeurId);
-        return etudiants;
+    public List<EtudiantDTO> getByProfesseurId(Integer professeurId) {
+        return DTOListMapper.mapEtudiant(etudiantRepository.getEtudiantsByProfesseurid(professeurId));
+    }
+
+    @Override
+    public EtudiantDTO getByEmail(String email) {
+        return new EtudiantDTO(etudiantRepository.findEtudiantByEmail(email));
     }
 }

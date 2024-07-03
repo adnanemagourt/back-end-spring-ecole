@@ -3,12 +3,15 @@ package com.example.back.services;
 import com.example.back.DTO.ProfesseurDTO;
 import com.example.back.entities.Professeur;
 
+import java.util.List;
+
 public interface ProfesseurService {
     boolean create(Professeur professeur);
     boolean update(Professeur professeur);
-    Iterable<ProfesseurDTO> readAll();
+    List<ProfesseurDTO> readAll();
     ProfesseurDTO read(Integer id);
     boolean delete(Integer id);
-    Iterable<ProfesseurDTO> searchByNom(String nom);
-    Iterable<ProfesseurDTO> getByEtudiantId(Integer etudiantId);
+    List<ProfesseurDTO> searchByNom(String nom);
+    List<ProfesseurDTO> getByEtudiantId(Integer etudiantId);
+    ProfesseurDTO getByEmail(String email);
 }

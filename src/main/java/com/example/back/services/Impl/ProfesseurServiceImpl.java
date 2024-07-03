@@ -1,12 +1,15 @@
 package com.example.back.services.Impl;
 
+import com.example.back.DTO.DTOListMapper;
 import com.example.back.DTO.ProfesseurDTO;
 import com.example.back.entities.Professeur;
+import com.example.back.repository.MatiereRepository;
 import com.example.back.repository.ProfesseurRepository;
 import com.example.back.services.ProfesseurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,8 +18,13 @@ public class ProfesseurServiceImpl implements ProfesseurService {
     @Autowired
     private ProfesseurRepository professeurRepository;
 
+    @Autowired
+    private MatiereRepository matiereRepository;
+
     @Override
     public boolean create(Professeur professeur) {
+        matiereRepository.findById(professeur.getMatiere().getId()).orElseThrow();
+        Professeur.builder().nom(professeur.getNom()).build();
         if(professeurRepository.findProfesseurByEmail(professeur.getEmail()) != null){
             return false;
         }
@@ -25,8 +33,8 @@ public class ProfesseurServiceImpl implements ProfesseurService {
     }
 
     @Override
-    public Iterable<ProfesseurDTO> readAll() {
-        return professeurRepository.findBy();
+    public List<ProfesseurDTO> readAll() {
+        return DTOListMapper.mapProfesseur(professeurRepository.findBy());
     }
 
     @Override
@@ -48,12 +56,17 @@ public class ProfesseurServiceImpl implements ProfesseurService {
     }
 
     @Override
-    public Iterable<ProfesseurDTO> searchByNom(String nom) {
-        return professeurRepository.searchProfesseursByNom(nom);
+    public List<ProfesseurDTO> searchByNom(String nom) {
+        return DTOListMapper.mapProfesseur(professeurRepository.findByNomContains(nom));
     }
 
     @Override
-    public Iterable<ProfesseurDTO> getByEtudiantId(Integer etudiantId) {
-        return professeurRepository.getProfesseursByEtudiantId(etudiantId);
+    public List<ProfesseurDTO> getByEtudiantId(Integer etudiantId) {
+        return DTOListMapper.mapProfesseur(professeurRepository.getProfesseursByEtudiantId(etudiantId));
+    }
+
+    @Override
+    public ProfesseurDTO getByEmail(String email) {
+        return new ProfesseurDTO(professeurRepository.findProfesseurByEmail(email));
     }
 }

@@ -7,6 +7,7 @@ import com.example.back.services.MatiereService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,8 +29,8 @@ public class MatiereServiceImpl implements MatiereService {
     }
 
     @Override
-    public Iterable<MatiereDTO> readAll() {
-        return matiereRepository.findBy();
+    public List<MatiereDTO> readAll() {
+        return DTOListMapper.mapMatiere(matiereRepository.findBy());
     }
 
     @Override
@@ -45,8 +46,8 @@ public class MatiereServiceImpl implements MatiereService {
     }
 
     @Override
-    public Iterable<MatiereDTO> searchByNom(String nom) {
-        return matiereRepository.searchMatieresByNom(nom);
+    public List<MatiereDTO> searchByNom(String nom) {
+        return DTOListMapper.mapMatiere(matiereRepository.findByNomContains(nom));
 
     }
 }
