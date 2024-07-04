@@ -6,10 +6,11 @@ import com.example.back.entities.Classe;
 import java.util.List;
 
 public interface ClasseService {
-    boolean create(Classe classe);
+    boolean create(Classe classe) throws Exception;
     List<ClasseDTO> readAll();
-    ClasseDTO read(Integer id);
-    boolean update(Classe classe);
-    boolean delete(Integer id);
+    ClasseDTO read(Integer id) throws Exception;
+    boolean update(Classe classe) throws Exception;
+    boolean delete(Integer id) throws Exception;
     List<ClasseDTO> searchByNom(String nom);
+    ClasseDTO findByNom(String nom);
 }

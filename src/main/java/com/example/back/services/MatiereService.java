@@ -7,10 +7,10 @@ import com.example.back.entities.Matiere;
 import java.util.List;
 
 public interface MatiereService {
-    boolean create(Matiere matiere);
-    boolean update(Matiere matiere);
+    boolean create(Matiere matiere) throws Exception;
+    boolean update(Matiere matiere) throws Exception;
     List<MatiereDTO> readAll();
-    MatiereDTO read(Integer id);
-    boolean delete(Integer id);
+    MatiereDTO read(Integer id) throws Exception;
+    boolean delete(Integer id) throws Exception;
     List<MatiereDTO> searchByNom(String nom);
 }

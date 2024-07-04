@@ -6,11 +6,12 @@ import com.example.back.entities.Directeur;
 import java.util.List;
 
 public interface DirecteurService {
-    boolean create(Directeur directeur);
-    boolean update(Directeur directeur);
-    Iterable<DirecteurDTO> readAll();
-    DirecteurDTO read(Integer id);
-    boolean delete(Integer id);
+    boolean create(Directeur directeur) throws Exception;
+    boolean update(Directeur directeur) throws Exception;
+    List<DirecteurDTO> readAll();
+    DirecteurDTO read(Integer id) throws Exception;
+    boolean delete(Integer id) throws Exception;
     List<DirecteurDTO> searchByNom(String nom);
     DirecteurDTO getByEmail(String email);
+    DirecteurDTO getByNomAndPrenom(String nom, String prenom);
 }

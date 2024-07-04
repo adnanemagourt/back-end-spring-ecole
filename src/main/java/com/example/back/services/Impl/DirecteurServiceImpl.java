@@ -18,9 +18,19 @@ public class DirecteurServiceImpl implements DirecteurService {
     private DirecteurRepository directeurRepository;
 
     @Override
-    public boolean create(Directeur directeur) {
+    public boolean create(Directeur directeur) throws Exception {
+        return saveCheck(directeur);
+    }
+
+    private boolean saveCheck(Directeur directeur) throws Exception {
+        if(directeur.getNom() == null || directeur.getNom().isEmpty() || directeur.getPrenom() == null || directeur.getPrenom().isEmpty() || directeur.getEmail() == null || directeur.getEmail().isEmpty() || directeur.getMotDePasse() == null || directeur.getMotDePasse().isEmpty()){
+            throw new Exception("important fields are empty");
+        }
         if(directeurRepository.findDirecteurByEmail(directeur.getEmail()) != null){
-            return false;
+            throw new Exception("already existing email");
+        }
+        if(directeurRepository.findByNomAndPrenom(directeur.getNom(), directeur.getPrenom()) != null){
+            throw new Exception("already existing nom & prénom");
         }
         directeurRepository.save(directeur);
         return true;
@@ -32,19 +42,25 @@ public class DirecteurServiceImpl implements DirecteurService {
     }
 
     @Override
-    public DirecteurDTO read(Integer id) {
+    public DirecteurDTO read(Integer id) throws Exception {
         Optional<Directeur> t = directeurRepository.findById(id);
-        return new DirecteurDTO(t.orElse(null));
+        return new DirecteurDTO(t.orElseThrow(()->new Exception("id not found")));
     }
 
     @Override
-    public boolean update(Directeur diecteur) {
-        directeurRepository.save(diecteur);
-        return true;
+    public boolean update(Directeur directeur) throws Exception {
+        Directeur old = directeurRepository.findById(directeur.getId()).orElseThrow(()->new Exception("id not found"));
+        if(!old.getNom().equals(directeur.getNom()) || !old.getPrenom().equals(directeur.getPrenom())){
+            throw new Exception("can't update nom and prenom");
+        }
+        return saveCheck(directeur);
     }
 
     @Override
-    public boolean delete(Integer id) {
+    public boolean delete(Integer id) throws Exception {
+        if(!directeurRepository.existsById(id)){
+            throw new Exception("id not found");
+        }
         directeurRepository.deleteById(id);
         return true;
     }
@@ -57,5 +73,10 @@ public class DirecteurServiceImpl implements DirecteurService {
     @Override
     public DirecteurDTO getByEmail(String email) {
         return new DirecteurDTO(directeurRepository.findDirecteurByEmail(email));
+    }
+
+    @Override
+    public DirecteurDTO getByNomAndPrenom(String nom, String prenom) {
+        return new DirecteurDTO(directeurRepository.findByNomAndPrenom(nom, prenom));
     }
 }

@@ -1,13 +1,15 @@
 package com.example.back.controllers;
 
-import com.example.back.DTO.*;
-import com.example.back.entities.*;
-import com.example.back.services.Impl.MatiereServiceImpl;
+import com.example.back.DTO.MatiereDTO;
+import com.example.back.entities.Matiere;
+import com.example.back.services.MatiereService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 @CrossOrigin()
@@ -15,48 +17,51 @@ import org.springframework.web.bind.annotation.*;
 public class MatiereController {
 
     @Autowired
-    private MatiereServiceImpl matiereServiceImpl;
+    private MatiereService matiereService;
 
 
     // insert
     @PostMapping(path = "")
-    public @ResponseBody ResponseEntity<String> addMatiere(@RequestBody Matiere matiere){
-        return matiereServiceImpl.create(matiere) ? new ResponseEntity<>("Successful", HttpStatus.CREATED) : new ResponseEntity<>("Error in creation", HttpStatus.CONFLICT);
+    public @ResponseBody ResponseEntity<String> addMatiere(@RequestBody Matiere matiere) throws Exception {
+        matiereService.create(matiere);
+        return new ResponseEntity<>("Successful", HttpStatus.CREATED);
     }
 
     // update
 
     @PutMapping(path = "")
-    public @ResponseBody ResponseEntity<String> updateMatiere(@RequestBody Matiere matiere){
-        return matiereServiceImpl.update(matiere) ? new ResponseEntity<>("Successful", HttpStatus.OK) : new ResponseEntity<>("Error in update", HttpStatus.CONFLICT);
+    public @ResponseBody ResponseEntity<String> updateMatiere(@RequestBody Matiere matiere) throws Exception {
+        matiereService.update(matiere);
+        return new ResponseEntity<>("Successful", HttpStatus.OK);
     }
 
     // get
 
     @GetMapping(path = "")
-    public @ResponseBody ResponseEntity<Iterable<MatiereDTO>> getMatiere(){
-        Iterable<MatiereDTO> matieres = matiereServiceImpl.readAll();
-        return matieres != null ? new ResponseEntity<>(matieres, HttpStatus.OK) : new ResponseEntity<>(matieres, HttpStatus.NOT_FOUND);
+    public @ResponseBody ResponseEntity<List<MatiereDTO>> getMatiere(){
+        List<MatiereDTO> matieres = matiereService.readAll();
+        return new ResponseEntity<>(matieres, HttpStatus.OK);
     }
 
     @GetMapping(path = "/id/{id}")
-    public @ResponseBody ResponseEntity<MatiereDTO> getMatiere(@PathVariable("id") Integer id){
-        MatiereDTO matiere = matiereServiceImpl.read(id);
-        return matiere != null ? new ResponseEntity<>(matiere, HttpStatus.OK) : new ResponseEntity<>((MatiereDTO) null, HttpStatus.NOT_FOUND);
+    public @ResponseBody ResponseEntity<MatiereDTO> getMatiere(@PathVariable("id") Integer id) throws Exception {
+        MatiereDTO matiere = matiereService.read(id);
+        return new ResponseEntity<>(matiere, HttpStatus.OK);
     }
 
     //get by nom
 
     @GetMapping(path = "/nom/{nom}")
-    public @ResponseBody ResponseEntity<Iterable<MatiereDTO>> getMatiere(@PathVariable("nom") String nom){
-        Iterable<MatiereDTO> matieres = matiereServiceImpl.searchByNom(nom);
-        return matieres != null ? new ResponseEntity<>(matieres, HttpStatus.OK) : new ResponseEntity<>((Iterable<MatiereDTO>) null, HttpStatus.NOT_FOUND);
+    public @ResponseBody ResponseEntity<List<MatiereDTO>> getMatiere(@PathVariable("nom") String nom){
+        List<MatiereDTO> matieres = matiereService.searchByNom(nom);
+        return new ResponseEntity<>(matieres, HttpStatus.OK);
     }
 
     //delete
 
     @DeleteMapping(path = "/{id}")
-    public @ResponseBody ResponseEntity<String> deleteMatiere(@PathVariable("id") Integer id){
-        return matiereServiceImpl.delete(id) ? new ResponseEntity<>("deleted", HttpStatus.OK) : new ResponseEntity<>("error", HttpStatus.CONFLICT);
+    public @ResponseBody ResponseEntity<String> deleteMatiere(@PathVariable("id") Integer id) throws Exception {
+        matiereService.delete(id);
+        return new ResponseEntity<>("deleted", HttpStatus.OK);
     }
 }

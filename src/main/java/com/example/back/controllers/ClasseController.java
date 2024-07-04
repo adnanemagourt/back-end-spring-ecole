@@ -21,15 +21,17 @@ public class ClasseController {
 
     // insert
     @PostMapping(path = "")
-    public @ResponseBody ResponseEntity<String> addClasse(@RequestBody Classe classe){
-        return classeService.create(classe) ? new ResponseEntity<>("Successful", HttpStatus.CREATED) : new ResponseEntity<>("Error in creation", HttpStatus.CONFLICT);
+    public @ResponseBody ResponseEntity<String> addClasse(@RequestBody Classe classe) throws Exception {
+        classeService.create(classe);
+        return new ResponseEntity<>("Successful", HttpStatus.CREATED);
     }
 
     // update
 
     @PutMapping(path = "")
-    public @ResponseBody ResponseEntity<String> updateClasse(@RequestBody Classe classe){
-        return classeService.update(classe) ? new ResponseEntity<>("Successful", HttpStatus.OK) : new ResponseEntity<>("Error in update", HttpStatus.CONFLICT);
+    public @ResponseBody ResponseEntity<String> updateClasse(@RequestBody Classe classe) throws Exception {
+        classeService.update(classe);
+        return new ResponseEntity<>("Successful", HttpStatus.OK);
     }
 
     // get
@@ -37,28 +39,29 @@ public class ClasseController {
     @GetMapping(path = "")
     public @ResponseBody ResponseEntity<List<ClasseDTO>> getClasse(){
         List<ClasseDTO> classes = classeService.readAll();
-        return classes != null ? new ResponseEntity<>(classes, HttpStatus.OK) : new ResponseEntity<>(classes, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(classes, HttpStatus.OK);
     }
 
     @GetMapping(path = "/id/{id}")
-    public @ResponseBody ResponseEntity<ClasseDTO> getClasse(@PathVariable("id") Integer id){
+    public @ResponseBody ResponseEntity<ClasseDTO> getClasse(@PathVariable("id") Integer id) throws Exception {
         ClasseDTO classe = classeService.read(id);
-        return classe != null ? new ResponseEntity<>(classe, HttpStatus.OK) : new ResponseEntity<>( classe, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(classe, HttpStatus.OK);
     }
 
     //get by nom
 
     @GetMapping(path = "/nom/{nom}")
-    public @ResponseBody ResponseEntity<Iterable<ClasseDTO>> getClasse(@PathVariable("nom") String nom){
-        Iterable<ClasseDTO> classes = classeService.searchByNom(nom);
-        return classes != null ? new ResponseEntity<>(classes, HttpStatus.OK) : new ResponseEntity<>(classes, HttpStatus.NOT_FOUND);
+    public @ResponseBody ResponseEntity<List<ClasseDTO>> getClasse(@PathVariable("nom") String nom){
+        List<ClasseDTO> classes = classeService.searchByNom(nom);
+        return new ResponseEntity<>(classes, HttpStatus.OK);
     }
 
     //delete
 
     @DeleteMapping(path = "/{id}")
-    public @ResponseBody ResponseEntity<String> deleteClasse(@PathVariable("id") Integer id){
-        return classeService.delete(id) ? new ResponseEntity<>("deleted", HttpStatus.OK) : new ResponseEntity<>("error", HttpStatus.CONFLICT);
+    public @ResponseBody ResponseEntity<String> deleteClasse(@PathVariable("id") Integer id) throws Exception {
+        classeService.delete(id);
+        return new ResponseEntity<>("deleted", HttpStatus.OK);
     }
 
 }

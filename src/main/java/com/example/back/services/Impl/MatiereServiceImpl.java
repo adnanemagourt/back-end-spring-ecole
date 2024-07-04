@@ -17,30 +17,45 @@ public class MatiereServiceImpl implements MatiereService {
     private MatiereRepository matiereRepository;
 
     @Override
-    public boolean create(Matiere matiere) {
-        matiereRepository.save(matiere);
-        return true;
+    public boolean create(Matiere matiere) throws Exception {
+        return saveCheck(matiere);
     }
 
     @Override
-    public boolean update(Matiere matiere) {
+    public boolean update(Matiere matiere) throws Exception {
+        if(!matiereRepository.existsById(matiere.getId())){
+            throw new Exception("matiere id n'existe pas");
+        }
+        return saveCheck(matiere);
+    }
+
+    private boolean saveCheck(Matiere matiere) throws Exception {
+        if(matiere.getNom() == null || matiere.getNom().isEmpty()){
+            throw new Exception("important field empty");
+        }
+        if(matiereRepository.findByNom(matiere.getNom()) != null){
+            throw new Exception("matiere nom already exists");
+        }
         matiereRepository.save(matiere);
         return true;
     }
 
     @Override
     public List<MatiereDTO> readAll() {
-        return DTOListMapper.mapMatiere(matiereRepository.findBy());
+        return DTOListMapper.mapMatiere(matiereRepository.findAll());
     }
 
     @Override
-    public MatiereDTO read(Integer id) {
+    public MatiereDTO read(Integer id) throws Exception {
         Optional<Matiere> t = matiereRepository.findById(id);
-        return new MatiereDTO(t.orElse(null));
+        return new MatiereDTO(t.orElseThrow(()->new Exception("id not found")));
     }
 
     @Override
-    public boolean delete(Integer id) {
+    public boolean delete(Integer id) throws Exception {
+        if(!matiereRepository.existsById(id)){
+            throw new Exception("id not found");
+        }
         matiereRepository.deleteById(id);
         return true;
     }

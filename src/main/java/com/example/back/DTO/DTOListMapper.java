@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DTOListMapper {
-    public static List<EtudiantDTO> mapEtudiant(Iterable<Etudiant> iter){
+    public static List<EtudiantDTO> mapEtudiant(List<Etudiant> iter){
         List<EtudiantDTO> list = new ArrayList<>();
         for(Etudiant et : iter){
             list.add(new EtudiantDTO(et));
@@ -14,7 +14,7 @@ public class DTOListMapper {
         return list;
     }
 
-    public static List<ClasseDTO> mapClasse(Iterable<Classe> iter){
+    public static List<ClasseDTO> mapClasse(List<Classe> iter){
         List<ClasseDTO> list = new ArrayList<>();
         for(Classe c : iter){
             list.add(new ClasseDTO(c));
@@ -22,7 +22,7 @@ public class DTOListMapper {
         return list;
     }
 
-    public static List<DirecteurDTO> mapDirecteur(Iterable<Directeur> iter){
+    public static List<DirecteurDTO> mapDirecteur(List<Directeur> iter){
         List<DirecteurDTO> list = new ArrayList<>();
         for(Directeur d : iter){
             list.add(new DirecteurDTO(d));
@@ -30,7 +30,7 @@ public class DTOListMapper {
         return list;
     }
 
-    public static List<MatiereDTO> mapMatiere(Iterable<Matiere> iter){
+    public static List<MatiereDTO> mapMatiere(List<Matiere> iter){
         List<MatiereDTO> list = new ArrayList<>();
         for(Matiere m : iter){
             list.add(new MatiereDTO(m));
@@ -38,7 +38,7 @@ public class DTOListMapper {
         return list;
     }
 
-    public static List<ProfesseurDTO> mapProfesseur(Iterable<Professeur> iter){
+    public static List<ProfesseurDTO> mapProfesseur(List<Professeur> iter){
         List<ProfesseurDTO> list = new ArrayList<>();
         for(Professeur p : iter){
             list.add(new ProfesseurDTO(p));

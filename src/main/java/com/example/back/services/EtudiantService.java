@@ -1,19 +1,18 @@
 package com.example.back.services;
 
 import com.example.back.DTO.EtudiantDTO;
-import com.example.back.entities.Etudiant;
 
 import java.util.List;
 
 public interface EtudiantService {
-    boolean create(Etudiant etudiant);
-    boolean update(Etudiant etudiant);
+    boolean create(EtudiantDTO etudiantdto) throws Exception;
+    boolean update(EtudiantDTO etudiantdto) throws Exception;
     List<EtudiantDTO> readAll();
-    EtudiantDTO read(Integer id);
-    boolean delete(Integer id);
+    EtudiantDTO read(Integer id) throws Exception;
+    boolean delete(Integer id) throws Exception;
     List<EtudiantDTO> searchByNom(String nom);
-    List<EtudiantDTO> getByClasseId(Integer classeId);
-    List<EtudiantDTO> getByProfesseurId(Integer professeurId);
+    List<EtudiantDTO> getByClasseId(Integer classeId) throws Exception;
+    List<EtudiantDTO> getByProfesseurId(Integer professeurId) throws Exception;
 
     EtudiantDTO getByEmail(String email);
 }

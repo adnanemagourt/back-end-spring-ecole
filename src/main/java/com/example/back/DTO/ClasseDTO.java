@@ -1,7 +1,11 @@
 package com.example.back.DTO;
 
 import com.example.back.entities.Classe;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @EqualsAndHashCode
@@ -12,6 +16,10 @@ public class ClasseDTO {
 
     private String nom;
 
+    private List<EtudiantDTO> etudiants;
+
+    private List<ProfesseurDTO> professeurs;
+
     public ClasseDTO(Integer id, String nom) {
         this.id = id;
         this.nom = nom;
@@ -21,5 +29,7 @@ public class ClasseDTO {
         if (classe == null) {return;}
         this.id = classe.getId();
         this.nom = classe.getNom();
+        this.etudiants = DTOListMapper.mapEtudiant(classe.etudiants);
+        this.professeurs = DTOListMapper.mapProfesseur(classe.professeurs);
     }
 }
