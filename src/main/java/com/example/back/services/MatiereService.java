@@ -7,7 +7,7 @@ import com.example.back.entities.Matiere;
 import java.util.List;
 
 public interface MatiereService {
-    boolean create(Matiere matiere) throws Exception;
+    MatiereDTO create(Matiere matiere) throws Exception;
     boolean update(Matiere matiere) throws Exception;
     List<MatiereDTO> readAll();
     MatiereDTO read(Integer id) throws Exception;

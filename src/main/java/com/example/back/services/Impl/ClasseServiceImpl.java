@@ -3,13 +3,15 @@ package com.example.back.services.Impl;
 import com.example.back.DTO.ClasseDTO;
 import com.example.back.DTO.DTOListMapper;
 import com.example.back.entities.Classe;
+import com.example.back.exceptions.AlreadyExistsException;
+import com.example.back.exceptions.EmptyFieldsException;
+import com.example.back.exceptions.NotExistsException;
 import com.example.back.repository.ClasseRepository;
 import com.example.back.services.ClasseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ClasseServiceImpl implements ClasseService {
@@ -18,19 +20,18 @@ public class ClasseServiceImpl implements ClasseService {
     private ClasseRepository classeRepository;
 
     @Override
-    public boolean create(Classe classe) throws Exception {
-        return saveCheck(classe);
+    public ClasseDTO create(Classe classe) throws Exception {
+         if(saveCheck(classe)) classeRepository.save(classe);
+         return new ClasseDTO(classe);
     }
-
     private boolean saveCheck(Classe classe) throws Exception {
         if(classe.getNom() == null || classe.getNom().isEmpty()){
-            throw new Exception("important field empty");
+            throw new EmptyFieldsException(List.of("nom"), "classe");
         }
-        Classe found = classeRepository.findByNom(classe.getNom());
-        if (found != null) {
-            throw new Exception("classe name already exists");
+        boolean existsbyNom = classeRepository.existsByNom(classe.getNom());
+        if (existsbyNom) {
+            throw new AlreadyExistsException(List.of("nom"), "classe");
         }
-        classeRepository.save(classe);
         return true;
     }
 
@@ -40,23 +41,23 @@ public class ClasseServiceImpl implements ClasseService {
     }
 
     @Override
-    public ClasseDTO read(Integer id) throws Exception {
-        Optional<Classe> t = classeRepository.findById(id);
-        return new ClasseDTO(t.orElseThrow(() -> new Exception("Classe id does not exist")));
+    public Classe read(Integer id) throws Exception {
+        Classe classe = classeRepository.findById(id).orElseThrow(() -> new NotExistsException(List.of("id"), "classe"));
+        return classe;
     }
 
     @Override
-    public boolean update(Classe classe) throws Exception {
-        if(!classeRepository.existsById(classe.getId())){
-            throw new Exception("Classe id does not exist");
-        }
-        return saveCheck(classe);
+    public void update(Classe classe) throws Exception {
+        Classe classe1 = classeRepository.findById(classe.getId()).orElseThrow(() -> new NotExistsException(List.of("id"), "classe"));
+        saveCheck(classe1);
+        classe1.setNom(classe.getNom());
+        classeRepository.save(classe1);
     }
 
     @Override
     public boolean delete(Integer id) throws Exception {
         if(!classeRepository.existsById(id)){
-            throw new Exception("Classe id does not exist");
+            throw new NotExistsException(List.of("id"), "classe");
         }
         classeRepository.deleteById(id);
         return true;
@@ -68,7 +69,7 @@ public class ClasseServiceImpl implements ClasseService {
     }
 
     @Override
-    public ClasseDTO findByNom(String nom) {
-        return new ClasseDTO(classeRepository.findByNom(nom));
+    public Classe findByNom(String nom) {
+        return classeRepository.findByNom(nom);
     }
 }

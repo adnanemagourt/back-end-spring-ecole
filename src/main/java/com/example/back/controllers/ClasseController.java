@@ -1,16 +1,16 @@
 package com.example.back.controllers;
 
-import com.example.back.DTO.*;
-import com.example.back.entities.*;
+import com.example.back.DTO.ClasseDTO;
+import com.example.back.entities.Classe;
 import com.example.back.services.ClasseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
-@Controller
+@RestController
 @CrossOrigin()
 @RequestMapping(path = "/api/classe")
 public class ClasseController {
@@ -21,15 +21,15 @@ public class ClasseController {
 
     // insert
     @PostMapping(path = "")
-    public @ResponseBody ResponseEntity<String> addClasse(@RequestBody Classe classe) throws Exception {
-        classeService.create(classe);
-        return new ResponseEntity<>("Successful", HttpStatus.CREATED);
+    public  ResponseEntity<ClasseDTO> addClasse(@RequestBody Classe classe) throws Exception {
+        ClasseDTO classe1 = classeService.create(classe);
+        return new ResponseEntity<>(classe1, HttpStatus.CREATED);
     }
 
     // update
 
     @PutMapping(path = "")
-    public @ResponseBody ResponseEntity<String> updateClasse(@RequestBody Classe classe) throws Exception {
+    public  ResponseEntity<String> updateClasse(@RequestBody Classe classe) throws Exception {
         classeService.update(classe);
         return new ResponseEntity<>("Successful", HttpStatus.OK);
     }
@@ -37,21 +37,21 @@ public class ClasseController {
     // get
 
     @GetMapping(path = "")
-    public @ResponseBody ResponseEntity<List<ClasseDTO>> getClasse(){
+    public  ResponseEntity<List<ClasseDTO>> getClasse(){
         List<ClasseDTO> classes = classeService.readAll();
         return new ResponseEntity<>(classes, HttpStatus.OK);
     }
 
     @GetMapping(path = "/id/{id}")
-    public @ResponseBody ResponseEntity<ClasseDTO> getClasse(@PathVariable("id") Integer id) throws Exception {
-        ClasseDTO classe = classeService.read(id);
+    public  ResponseEntity<Classe> getClasse(@PathVariable("id") Integer id) throws Exception {
+        Classe classe = classeService.read(id);
         return new ResponseEntity<>(classe, HttpStatus.OK);
     }
 
     //get by nom
 
     @GetMapping(path = "/nom/{nom}")
-    public @ResponseBody ResponseEntity<List<ClasseDTO>> getClasse(@PathVariable("nom") String nom){
+    public  ResponseEntity<List<ClasseDTO>> getClasse(@PathVariable("nom") String nom){
         List<ClasseDTO> classes = classeService.searchByNom(nom);
         return new ResponseEntity<>(classes, HttpStatus.OK);
     }
@@ -59,7 +59,7 @@ public class ClasseController {
     //delete
 
     @DeleteMapping(path = "/{id}")
-    public @ResponseBody ResponseEntity<String> deleteClasse(@PathVariable("id") Integer id) throws Exception {
+    public  ResponseEntity<String> deleteClasse(@PathVariable("id") Integer id) throws Exception {
         classeService.delete(id);
         return new ResponseEntity<>("deleted", HttpStatus.OK);
     }

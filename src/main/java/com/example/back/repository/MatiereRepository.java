@@ -11,4 +11,6 @@ public interface MatiereRepository extends JpaRepository<Matiere, Integer> {
 
     Matiere findByNom(String nom);
 
+    boolean existsByNom(String nom);
+
 }

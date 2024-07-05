@@ -14,4 +14,8 @@ public interface DirecteurRepository extends JpaRepository<Directeur, Integer> {
     List<Directeur> findBy();
 
     Directeur findByNomAndPrenom(String nom, String prenom);
+
+    boolean existsByEmail(String email);
+
+    boolean existsByNomAndPrenom(String nom, String prenom);
 }

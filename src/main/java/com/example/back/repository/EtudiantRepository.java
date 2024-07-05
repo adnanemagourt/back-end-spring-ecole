@@ -24,4 +24,8 @@ public interface EtudiantRepository extends JpaRepository<Etudiant, Integer> {
     List<Etudiant> getEtudiantsByProfesseurid(@Param("id") Integer id);
 
     Etudiant findByNomAndPrenom(String nom, String prenom);
+
+    boolean existsByNomAndPrenom(String nom, String prenom);
+
+    boolean existsByEmail(String email);
 }

@@ -1,5 +1,6 @@
 package com.example.back.repository;
 
+import com.example.back.entities.Classe;
 import com.example.back.entities.Professeur;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,9 @@ public interface ProfesseurRepository extends JpaRepository<Professeur, Integer>
            "WHERE e.id = :id")
     List<Professeur> getProfesseursByEtudiantId(@Param("id") Integer id);
 
+    boolean existsByEmail(String email);
+
+    boolean existsByNomAndPrenom(String nom, String prenom);
+
+    List<Classe> findClassesById(Integer id);
 }

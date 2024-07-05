@@ -6,7 +6,7 @@ import com.example.back.entities.Directeur;
 import java.util.List;
 
 public interface DirecteurService {
-    boolean create(Directeur directeur) throws Exception;
+    DirecteurDTO create(Directeur directeur) throws Exception;
     boolean update(Directeur directeur) throws Exception;
     List<DirecteurDTO> readAll();
     DirecteurDTO read(Integer id) throws Exception;

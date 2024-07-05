@@ -2,8 +2,13 @@ package com.example.back.services.Impl;
 
 import com.example.back.DTO.DTOListMapper;
 import com.example.back.DTO.ProfesseurDTO;
+import com.example.back.entities.Classe;
 import com.example.back.entities.Matiere;
 import com.example.back.entities.Professeur;
+import com.example.back.exceptions.AlreadyExistsException;
+import com.example.back.exceptions.EmptyFieldsException;
+import com.example.back.exceptions.NotExistsException;
+import com.example.back.exceptions.UnAuthorizedUpdateException;
 import com.example.back.repository.EtudiantRepository;
 import com.example.back.repository.MatiereRepository;
 import com.example.back.repository.ProfesseurRepository;
@@ -27,28 +32,49 @@ public class ProfesseurServiceImpl implements ProfesseurService {
     private EtudiantRepository etudiantRepository;
 
     @Override
-    public boolean create(ProfesseurDTO professeurdto) throws Exception {
-        return saveCheck(professeurdto);
+    public ProfesseurDTO create(ProfesseurDTO professeurdto) throws Exception {
+        Professeur professeur = saveCheck(professeurdto);
+        professeurRepository.save(professeur);
+        return professeurdto;
     }
 
-    private boolean saveCheck(ProfesseurDTO professeurdto) throws Exception {
-        if(professeurdto.getNom() == null || professeurdto.getNom().isEmpty() || professeurdto.getPrenom() == null || professeurdto.getPrenom().isEmpty() || professeurdto.getEmail() == null || professeurdto.getEmail().isEmpty() || professeurdto.getMotDePasse() == null || professeurdto.getMotDePasse().isEmpty()){
-            throw new Exception("important fields are empty");
+    private static List<String> getEmptyFields(ProfesseurDTO professeur) {
+        List<String> emptyFields = new java.util.ArrayList<>(List.of());
+        if(professeur.getNom() == null || professeur.getNom().isEmpty()){
+            emptyFields.add("nom");
+        }
+        if(professeur.getPrenom() == null || professeur.getPrenom().isEmpty()){
+            emptyFields.add("prenom");
+        }
+        if(professeur.getEmail() == null || professeur.getEmail().isEmpty()){
+            emptyFields.add("email");
+        }
+        if(professeur.getMotDePasse() == null || professeur.getMotDePasse().isEmpty()){
+            emptyFields.add("motDePasse");
+        }
+        return emptyFields;
+    }
+
+
+    private Professeur saveCheck(ProfesseurDTO professeurdto) throws Exception {
+        List<String> emptyFields = getEmptyFields(professeurdto);
+        if(!emptyFields.isEmpty()){
+            throw new EmptyFieldsException(emptyFields, "professeur");
         }
 
-        if(professeurRepository.findProfesseurByEmail(professeurdto.getEmail()) != null){
-            throw new Exception("email already exist");
+        if (professeurRepository.existsByEmail(professeurdto.getEmail())) {
+            throw new AlreadyExistsException(List.of("email"), "professeur");
         }
-        if(professeurRepository.findByNomAndPrenom(professeurdto.getNom(), professeurdto.getPrenom()) != null){
-            throw new Exception("nom & prenom already exist");
-        }
-
-        Matiere matiere = new Matiere();
-        if(professeurdto.getMatiere_id()!=null && professeurdto.getMatiere_id()>0){
-            matiere = matiereRepository.findById(professeurdto.getMatiere_id()).orElseThrow(()->new Exception("matiere id does not exist"));
+        if (professeurRepository.existsByNomAndPrenom(professeurdto.getNom(), professeurdto.getPrenom())) {
+            throw new AlreadyExistsException(List.of("nom", "prenom"), "professeur");
         }
 
-        Professeur professeur = Professeur.builder()
+        Matiere matiere = null;
+        if (professeurdto.getMatiere_id() != null && professeurdto.getMatiere_id() > 0) {
+            matiere = matiereRepository.findById(professeurdto.getMatiere_id()).orElseThrow(() -> new NotExistsException(List.of("id"), "matiere"));
+        }
+
+        return Professeur.builder()
                 .id(professeurdto.getId())
                 .nom(professeurdto.getNom())
                 .prenom(professeurdto.getPrenom())
@@ -59,8 +85,6 @@ public class ProfesseurServiceImpl implements ProfesseurService {
                 .matiere(matiere)
                 .build();
 
-        professeurRepository.save(professeur);
-        return true;
     }
 
     @Override
@@ -71,22 +95,24 @@ public class ProfesseurServiceImpl implements ProfesseurService {
     @Override
     public ProfesseurDTO read(Integer id) throws Exception {
         Optional<Professeur> t = professeurRepository.findById(id);
-        return new ProfesseurDTO(t.orElseThrow(()->new Exception("id not found")));
+        return new ProfesseurDTO(t.orElseThrow(() -> new NotExistsException(List.of("id"), "professeur")));
     }
 
     @Override
     public boolean update(ProfesseurDTO professeurdto) throws Exception {
-        Professeur old = professeurRepository.findById(professeurdto.getId()).orElseThrow(()->new Exception("id not found"));
-        if(!old.getNom().equals(professeurdto.getNom()) || !old.getPrenom().equals(professeurdto.getPrenom())){
-            throw new Exception("can't update nom and prenom");
+        Professeur old = professeurRepository.findById(professeurdto.getId()).orElseThrow(() -> new NotExistsException(List.of("id"), "matiere"));
+        if (!old.getNom().equals(professeurdto.getNom()) || !old.getPrenom().equals(professeurdto.getPrenom())) {
+            throw new UnAuthorizedUpdateException(List.of("nom", "prenom"), "professeur");
         }
-        return saveCheck(professeurdto);
+        Professeur professeur = saveCheck(professeurdto);
+        professeurRepository.save(professeur);
+        return true;
     }
 
     @Override
     public boolean delete(Integer id) throws Exception {
-        if(!professeurRepository.existsById(id)){
-            throw new Exception("id does not exist");
+        if (!professeurRepository.existsById(id)) {
+            throw new NotExistsException(List.of("id"), "professeur");
         }
         professeurRepository.deleteById(id);
         return true;
@@ -99,8 +125,8 @@ public class ProfesseurServiceImpl implements ProfesseurService {
 
     @Override
     public List<ProfesseurDTO> getByEtudiantId(Integer etudiantId) throws Exception {
-        if(!etudiantRepository.existsById(etudiantId)){
-            throw new Exception("etudiant id does not exist");
+        if (!etudiantRepository.existsById(etudiantId)) {
+            throw new NotExistsException(List.of("id"), "etudiant");
         }
         return DTOListMapper.mapProfesseur(professeurRepository.getProfesseursByEtudiantId(etudiantId));
     }
@@ -108,5 +134,11 @@ public class ProfesseurServiceImpl implements ProfesseurService {
     @Override
     public ProfesseurDTO getByEmail(String email) {
         return new ProfesseurDTO(professeurRepository.findProfesseurByEmail(email));
+    }
+
+    @Override
+    public List<Classe> findProfesseurClasses(Integer id) {
+        Professeur professeur = professeurRepository.findById(id).orElse(null);
+        return professeur.getClasses();
     }
 }

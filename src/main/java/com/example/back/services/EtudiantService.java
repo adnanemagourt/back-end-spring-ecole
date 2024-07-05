@@ -5,7 +5,7 @@ import com.example.back.DTO.EtudiantDTO;
 import java.util.List;
 
 public interface EtudiantService {
-    boolean create(EtudiantDTO etudiantdto) throws Exception;
+    EtudiantDTO create(EtudiantDTO etudiantdto) throws Exception;
     boolean update(EtudiantDTO etudiantdto) throws Exception;
     List<EtudiantDTO> readAll();
     EtudiantDTO read(Integer id) throws Exception;
