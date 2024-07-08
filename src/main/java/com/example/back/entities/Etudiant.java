@@ -3,6 +3,7 @@ package com.example.back.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,6 +44,20 @@ public class Etudiant {
 
     @ManyToMany(mappedBy = "etudiants")
     public List<Matiere> matieres;
+
+    public boolean addMatiere(Matiere matiere) {
+        if(matieres == null){
+            matieres = new ArrayList<>();
+        }
+        return matieres.add(matiere);
+    }
+
+    public boolean removeMatiere(Matiere matiere) {
+        if(matieres == null){
+            return false;
+        }
+        return matieres.remove(matiere);
+    }
 
     @ManyToOne
     @JoinColumn(

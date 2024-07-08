@@ -24,8 +24,22 @@ public class Classe {
     @Column(name = "nom")
     public String nom;
 
+    @Getter
     @OneToMany(mappedBy = "classe")
     public List<Etudiant> etudiants;
+
+    public boolean addEtudiant(Etudiant etudiant) {
+        if(etudiants == null){
+            etudiants = new ArrayList<>();
+        }
+        return etudiants.add(etudiant);
+    }
+    public boolean removeEtudiant(Etudiant etudiant) {
+        if(etudiants == null){
+            return false;
+        }
+        return etudiants.remove(etudiant);
+    }
 
     @Getter
     @Setter
@@ -53,7 +67,10 @@ public class Classe {
         professeurs.add(professeur);
     }
 
-    public void deleteProfesseur(Professeur professeur) {
+    public void removeProfesseur(Professeur professeur) {
+        if(professeurs == null){
+            return;
+        }
         professeurs.remove(professeur);
     }
 

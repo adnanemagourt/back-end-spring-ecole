@@ -3,6 +3,7 @@ package com.example.back.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -63,6 +64,19 @@ public class Professeur {
     @Getter
     @ManyToMany(mappedBy = "professeurs")
     public List<Classe> classes;
+
+    public boolean addClasse(Classe classe) {
+        if(classes == null) {
+            classes = new ArrayList<>();
+        }
+        return classes.add(classe);
+    }
+    public boolean removeClasse(Classe classe) {
+        if(classes == null) {
+            return false;
+        }
+        return classes.remove(classe);
+    }
 
 
 
