@@ -1,8 +1,12 @@
 package com.example.back.controllers;
 
-import com.example.back.DTO.EtudiantDTO;
-import com.example.back.DTO.MatiereDTO;
-import com.example.back.DTO.ProfesseurDTO;
+import com.example.back.DTO.etudiantDTO.EtudiantDTO;
+import com.example.back.DTO.etudiantDTO.UnlinkedEtudiantDTO;
+import com.example.back.DTO.matiereDTO.LinkedMatiereDTO;
+import com.example.back.DTO.matiereDTO.MatiereDTO;
+import com.example.back.DTO.matiereDTO.UnlinkedMatiereDTO;
+import com.example.back.DTO.professeurDTO.ProfesseurDTO;
+import com.example.back.DTO.professeurDTO.UnlinkedProfesseurDTO;
 import com.example.back.entities.Matiere;
 import com.example.back.exceptions.AlreadyExistsException;
 import com.example.back.exceptions.NotExistsException;
@@ -25,7 +29,7 @@ public class MatiereController {
 
     // insert
     @PostMapping(path = "")
-    public ResponseEntity<MatiereDTO> addMatiere(@RequestBody Matiere matiere) throws Exception {
+    public ResponseEntity<MatiereDTO> addMatiere(@RequestBody UnlinkedMatiereDTO matiere) throws Exception {
         MatiereDTO matiereDTO = matiereService.create(matiere);
         return new ResponseEntity<>(matiereDTO, HttpStatus.CREATED);
     }
@@ -33,7 +37,7 @@ public class MatiereController {
     // update
 
     @PutMapping(path = "")
-    public ResponseEntity<String> updateMatiere(@RequestBody Matiere matiere) throws Exception {
+    public ResponseEntity<String> updateMatiere(@RequestBody UnlinkedMatiereDTO matiere) throws Exception {
         matiereService.update(matiere);
         return new ResponseEntity<>("Successful", HttpStatus.OK);
     }
@@ -41,22 +45,22 @@ public class MatiereController {
     // get
 
     @GetMapping(path = "")
-    public ResponseEntity<List<MatiereDTO>> getMatiere() {
-        List<MatiereDTO> matieres = matiereService.readAll();
+    public ResponseEntity<List<UnlinkedMatiereDTO>> getMatiere() {
+        List<UnlinkedMatiereDTO> matieres = matiereService.readAll();
         return new ResponseEntity<>(matieres, HttpStatus.OK);
     }
 
     @GetMapping(path = "/id/{id}")
-    public ResponseEntity<Matiere> getMatiere(@PathVariable("id") Integer id) throws Exception {
-        Matiere matiere = matiereService.read(id);
+    public ResponseEntity<LinkedMatiereDTO> getMatiere(@PathVariable("id") Integer id) throws Exception {
+        LinkedMatiereDTO matiere = matiereService.read(id);
         return new ResponseEntity<>(matiere, HttpStatus.OK);
     }
 
     //get by nom
 
     @GetMapping(path = "/nom/{nom}")
-    public ResponseEntity<List<MatiereDTO>> getMatiere(@PathVariable("nom") String nom) {
-        List<MatiereDTO> matieres = matiereService.searchByNom(nom);
+    public ResponseEntity<List<UnlinkedMatiereDTO>> getMatiere(@PathVariable("nom") String nom) {
+        List<UnlinkedMatiereDTO> matieres = matiereService.searchByNom(nom);
         return new ResponseEntity<>(matieres, HttpStatus.OK);
     }
 
@@ -70,40 +74,13 @@ public class MatiereController {
 
     // get etudiants of matiere
     @GetMapping(path = "/{id}/etudiants")
-    public ResponseEntity<List<EtudiantDTO>> getEtudiantsMatiere(@PathVariable("id") Integer id) throws NotExistsException {
+    public ResponseEntity<List<UnlinkedEtudiantDTO>> getEtudiantsMatiere(@PathVariable("id") Integer id) throws NotExistsException {
         return new ResponseEntity<>(matiereService.getEtudiantsMatiere(id), HttpStatus.OK);
     }
 
-    // link etudiants to matiere
-    @PostMapping(path = "/{id}/etudiants")
-    public ResponseEntity<String> linkEtudiants(@PathVariable("id") Integer id, @RequestBody List<Integer> etudiants) throws AlreadyExistsException, NotExistsException {
-        matiereService.linkEtudiants(id, etudiants);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
-
-    // unlink etudiants from matiere
-    @DeleteMapping(path = "/{id}/etudiants")
-    public ResponseEntity<String> unlinkEtudiants(@PathVariable("id") Integer id, @RequestBody List<Integer> etudiants) throws AlreadyExistsException, NotExistsException {
-        matiereService.unlinkEtudiants(id, etudiants);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
-
     @GetMapping(path = "/{id}/professeurs")
-    public ResponseEntity<List<ProfesseurDTO>> getProfesseursMatiere(@PathVariable("id") Integer id) throws NotExistsException {
+    public ResponseEntity<List<UnlinkedProfesseurDTO>> getProfesseursMatiere(@PathVariable("id") Integer id) throws NotExistsException {
         return new ResponseEntity<>(matiereService.getProfesseursMatiere(id), HttpStatus.OK);
     }
 
-    // link professeurs to matiere
-    @PostMapping(path = "/{id}/professeurs")
-    public ResponseEntity<String> linkProfesseurs(@PathVariable("id") Integer id, @RequestBody List<Integer> professeurs) throws AlreadyExistsException, NotExistsException {
-        matiereService.linkProfesseurs(id, professeurs);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
-
-    // unlink professeurs to matiere
-    @DeleteMapping(path = "/{id}/professeurs")
-    public ResponseEntity<String> unlinkProfesseurs(@PathVariable("id") Integer id, @RequestBody List<Integer> professeurs) throws AlreadyExistsException, NotExistsException {
-        matiereService.unlinkProfesseurs(id, professeurs);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
 }

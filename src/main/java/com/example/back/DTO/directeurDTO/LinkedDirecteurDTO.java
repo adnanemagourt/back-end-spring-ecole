@@ -1,14 +1,12 @@
-package com.example.back.DTO;
+package com.example.back.DTO.directeurDTO;
 
 import com.example.back.entities.Directeur;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-@Getter
-@EqualsAndHashCode
 @Data
-public class DirecteurDTO {
+public class LinkedDirecteurDTO {
 
     private Integer id;
 
@@ -24,7 +22,7 @@ public class DirecteurDTO {
 
     private String telephone;
 
-    public DirecteurDTO(Integer id, String nom, String prenom, String email, String motDePasse, String adresse, String telephone) {
+    public LinkedDirecteurDTO(Integer id, String nom, String prenom, String email, String motDePasse, String adresse, String telephone) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -34,7 +32,7 @@ public class DirecteurDTO {
         this.telephone = telephone;
     }
 
-    public DirecteurDTO(Directeur directeur) {
+    public LinkedDirecteurDTO(Directeur directeur) {
         if (directeur == null) {return;}
         this.id = directeur.getId();
         this.nom = directeur.getNom();

@@ -1,6 +1,6 @@
 package com.example.back.controllers;
 
-import com.example.back.DTO.DirecteurDTO;
+import com.example.back.DTO.directeurDTO.DirecteurDTO;
 import com.example.back.entities.Directeur;
 import com.example.back.services.DirecteurService;
 import org.springframework.beans.factory.annotation.Autowired;

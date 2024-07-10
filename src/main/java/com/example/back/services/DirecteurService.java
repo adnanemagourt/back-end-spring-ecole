@@ -1,6 +1,6 @@
 package com.example.back.services;
 
-import com.example.back.DTO.DirecteurDTO;
+import com.example.back.DTO.directeurDTO.DirecteurDTO;
 import com.example.back.entities.Directeur;
 
 import java.util.List;

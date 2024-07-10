@@ -13,5 +13,6 @@ public interface ClasseRepository extends JpaRepository<Classe, Integer> {
     List<Classe> findByNomContains(String nom);
 
     boolean existsByNom(String nom);
+
     Classe findByNom(String nom);
 }

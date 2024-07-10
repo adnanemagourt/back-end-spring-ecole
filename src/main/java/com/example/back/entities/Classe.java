@@ -9,22 +9,19 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Builder
 @Table(name = "classe")
 public class Classe {
-    @Setter
-    @Getter
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
 
-    @Setter
-    @Getter
     @Column(name = "nom")
     public String nom;
 
-    @Getter
     @OneToMany(mappedBy = "classe")
     public List<Etudiant> etudiants;
 
@@ -41,8 +38,6 @@ public class Classe {
         return etudiants.remove(etudiant);
     }
 
-    @Getter
-    @Setter
     @ManyToMany(
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER

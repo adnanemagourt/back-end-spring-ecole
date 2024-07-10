@@ -9,75 +9,52 @@ import java.util.List;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
+@Getter
 @Builder
 @Table(name = "professeur")
 public class Professeur {
-    @Setter
-    @Getter
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private Integer id;
-
-    @Setter
-    @Getter
     @Column(name = "nom")
     public String nom;
-
-    @Setter
-    @Getter
     @Column(name = "prenom")
     public String prenom;
-
-    @Setter
-    @Getter
     @Column(name = "email")
     public String email;
-
-    @Setter
-    @Getter
-    @Column(name = "mot_de_passe")
-    private String motDePasse;
-
-    @Setter
-    @Getter
     @Column(name = "adresse")
     public String adresse;
-
-    @Setter
-    @Getter
     @Column(name = "telephone")
     public String telephone;
-
-//    @Column(name = "matiere_id")
-//    private Integer matiereId;
-
-    @Setter
-    @Getter
     @ManyToOne
     @JoinColumn(
             name = "matiere_id",
             referencedColumnName = "id"
     )
     public Matiere matiere;
-
-    @Getter
     @ManyToMany(mappedBy = "professeurs")
     public List<Classe> classes;
 
+//    @Column(name = "matiere_id")
+//    private Integer matiereId;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+    @Column(name = "mot_de_passe")
+    private String motDePasse;
+
     public boolean addClasse(Classe classe) {
-        if(classes == null) {
+        if (classes == null) {
             classes = new ArrayList<>();
         }
         return classes.add(classe);
     }
+
     public boolean removeClasse(Classe classe) {
-        if(classes == null) {
+        if (classes == null) {
             return false;
         }
         return classes.remove(classe);
     }
-
 
 
     //    public Integer getMatiereId() { return matiereId; }

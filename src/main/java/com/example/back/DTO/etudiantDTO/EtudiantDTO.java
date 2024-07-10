@@ -1,12 +1,10 @@
-package com.example.back.DTO;
+package com.example.back.DTO.etudiantDTO;
 
 import com.example.back.entities.Classe;
 import com.example.back.entities.Etudiant;
 import lombok.*;
 import java.util.Date;
 
-@Getter
-@EqualsAndHashCode
 @Data
 public class EtudiantDTO {
 
@@ -26,9 +24,9 @@ public class EtudiantDTO {
 
     private String telephone;
 
-    private Integer classe_id;
+    public EtudiantDTO() {}
 
-    public EtudiantDTO(Integer id, String nom, String prenom, String email, String motDePasse, Date dateNaissance, String adresse, String telephone, Integer classe_id) {
+    public EtudiantDTO(Integer id, String nom, String prenom, String email, String motDePasse, Date dateNaissance, String adresse, String telephone) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -37,7 +35,6 @@ public class EtudiantDTO {
         this.dateNaissance = dateNaissance;
         this.adresse = adresse;
         this.telephone = telephone;
-        this.classe_id = classe_id;
     }
 
     public EtudiantDTO(Etudiant etudiant){
@@ -50,8 +47,6 @@ public class EtudiantDTO {
         this.dateNaissance = etudiant.getDateNaissance();
         this.adresse = etudiant.getAdresse();
         this.telephone = etudiant.getTelephone();
-        Classe classe = etudiant.getClasse();
-        this.classe_id = classe == null ? null : classe.getId();
     }
 
 

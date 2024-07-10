@@ -1,11 +1,9 @@
-package com.example.back.DTO;
+package com.example.back.DTO.professeurDTO;
 
 import com.example.back.entities.Matiere;
 import com.example.back.entities.Professeur;
 import lombok.*;
 
-@Getter
-@EqualsAndHashCode
 @Data
 public class ProfesseurDTO {
 
@@ -23,9 +21,9 @@ public class ProfesseurDTO {
 
     public String telephone;
 
-    public Integer matiere_id;
+    public ProfesseurDTO() {}
 
-    public ProfesseurDTO(Integer id, String nom, String prenom, String email, String motDePasse, String adresse, String telephone, Integer matiere_id) {
+    public ProfesseurDTO(Integer id, String nom, String prenom, String email, String motDePasse, String adresse, String telephone) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -33,7 +31,6 @@ public class ProfesseurDTO {
         this.motDePasse = motDePasse;
         this.adresse = adresse;
         this.telephone = telephone;
-        this.matiere_id = matiere_id;
     }
 
     public ProfesseurDTO(Professeur professeur) {
@@ -45,8 +42,6 @@ public class ProfesseurDTO {
         this.motDePasse = professeur.getMotDePasse();
         this.adresse = professeur.getAdresse();
         this.telephone = professeur.getTelephone();
-        Matiere matiere = professeur.getMatiere();
-        this.matiere_id = matiere == null ? null : matiere.getId() ;
     }
 
 }

@@ -1,7 +1,7 @@
 package com.example.back.services.Impl;
 
 import com.example.back.DTO.DTOListMapper;
-import com.example.back.DTO.DirecteurDTO;
+import com.example.back.DTO.directeurDTO.DirecteurDTO;
 import com.example.back.entities.Directeur;
 import com.example.back.exceptions.AlreadyExistsException;
 import com.example.back.exceptions.EmptyFieldsException;

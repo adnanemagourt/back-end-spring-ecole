@@ -1,21 +1,20 @@
-package com.example.back.DTO;
+package com.example.back.DTO.matiereDTO;
 
+import com.example.back.DTO.DTOListMapper;
+import com.example.back.DTO.professeurDTO.ProfesseurDTO;
+import com.example.back.DTO.etudiantDTO.EtudiantDTO;
 import com.example.back.entities.Matiere;
 import lombok.*;
 
 import java.util.List;
 
-@Getter
-@EqualsAndHashCode
 @Data
 public class MatiereDTO {
     private Integer id;
 
     private String nom;
 
-    private List<EtudiantDTO> etudiants;
-
-    private List<ProfesseurDTO> professeurs;
+    public MatiereDTO() {}
 
     public MatiereDTO(Integer id, String nom) {
         this.id = id;
@@ -26,8 +25,6 @@ public class MatiereDTO {
         if (matiere == null) {return;}
         this.id = matiere.getId();
         this.nom = matiere.getNom();
-        this.etudiants = DTOListMapper.mapEtudiant(matiere.etudiants);
-        this.professeurs = DTOListMapper.mapProfesseur(matiere.professeurs);
     }
 
 }
