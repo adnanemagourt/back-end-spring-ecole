@@ -4,10 +4,7 @@ import com.example.back.DTO.classeDTO.ClasseDTO;
 import com.example.back.DTO.etudiantDTO.EtudiantDTO;
 import com.example.back.DTO.etudiantDTO.LinkedEtudiantDTO;
 import com.example.back.DTO.etudiantDTO.UnlinkedEtudiantDTO;
-import com.example.back.DTO.matiereDTO.MatiereDTO;
 import com.example.back.DTO.matiereDTO.UnlinkedMatiereDTO;
-import com.example.back.entities.Etudiant;
-import com.example.back.exceptions.AlreadyExistsException;
 import com.example.back.exceptions.NotExistsException;
 import com.example.back.services.EtudiantService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +82,7 @@ public class EtudiantController {
     }
     //autre
 
-    @GetMapping(path = "/{id}")
+    @GetMapping(path = "/classe/{id}")
     public ResponseEntity<List<UnlinkedEtudiantDTO>> findEtudiantsByClasseid(@PathVariable("id") Integer id) throws Exception {
         List<UnlinkedEtudiantDTO> etudiants = etudiantService.getByClasseId(id);
         return new ResponseEntity<>(etudiants, HttpStatus.OK);

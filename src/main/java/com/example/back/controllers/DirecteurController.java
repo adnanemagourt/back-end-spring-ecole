@@ -25,12 +25,10 @@ public class DirecteurController {
     public ResponseEntity<DirecteurDTO> login(@RequestBody DirecteurDTO directeur) throws Exception {
         DirecteurDTO found = directeurService.getByEmail(directeur.getEmail());
         if (found == null) {
-            //return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             throw new Exception("Not found");
         }
 
         if (!Objects.equals(found.getMotDePasse(), directeur.getMotDePasse())) {
-            //return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
             throw new Exception("Wrong password");
         }
         return new ResponseEntity<>(found, HttpStatus.OK);

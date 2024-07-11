@@ -33,8 +33,6 @@ public class Professeur {
     @ManyToMany(mappedBy = "professeurs")
     public List<Classe> classes;
 
-//    @Column(name = "matiere_id")
-//    private Integer matiereId;
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -56,9 +54,5 @@ public class Professeur {
         return classes.remove(classe);
     }
 
-
-    //    public Integer getMatiereId() { return matiereId; }
-
-//    public void setMatiereId(Integer classeId) { this.matiereId = classeId; }
 
 }

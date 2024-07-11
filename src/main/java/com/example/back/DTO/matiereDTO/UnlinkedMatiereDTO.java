@@ -1,17 +1,13 @@
 package com.example.back.DTO.matiereDTO;
 
 import com.example.back.DTO.DTOListMapper;
-import com.example.back.DTO.professeurDTO.ProfesseurDTO;
-import com.example.back.DTO.etudiantDTO.EtudiantDTO;
 import com.example.back.entities.Matiere;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 import java.util.List;
 
 @Data
-public class UnlinkedMatiereDTO extends MatiereDTO{
+public class UnlinkedMatiereDTO extends MatiereDTO {
 
     private List<Integer> etudiants;
 
@@ -25,7 +21,9 @@ public class UnlinkedMatiereDTO extends MatiereDTO{
 
     public UnlinkedMatiereDTO(Matiere matiere) {
         super(matiere);
-        if (matiere == null) {return;}
+        if (matiere == null) {
+            return;
+        }
         this.etudiants = DTOListMapper.mapEtudiantIds(matiere.etudiants);
         this.professeurs = DTOListMapper.mapProfesseurIds(matiere.professeurs);
     }

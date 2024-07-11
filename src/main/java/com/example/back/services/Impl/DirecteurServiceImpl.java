@@ -21,41 +21,41 @@ public class DirecteurServiceImpl implements DirecteurService {
     @Autowired
     private DirecteurRepository directeurRepository;
 
+    private static List<String> getEmptyFields(Directeur directeur) {
+        List<String> emptyFields = new java.util.ArrayList<>(List.of());
+        if (directeur.getNom() == null || directeur.getNom().isEmpty()) {
+            emptyFields.add("nom");
+        }
+        if (directeur.getPrenom() == null || directeur.getPrenom().isEmpty()) {
+            emptyFields.add("prenom");
+        }
+        if (directeur.getEmail() == null || directeur.getEmail().isEmpty()) {
+            emptyFields.add("email");
+        }
+        if (directeur.getMotDePasse() == null || directeur.getMotDePasse().isEmpty()) {
+            emptyFields.add("motDePasse");
+        }
+        return emptyFields;
+    }
+
     @Override
     public DirecteurDTO create(Directeur directeur) throws Exception {
-        if(saveCheck(directeur)) directeurRepository.save(directeur);
+        if (saveCheck(directeur)) directeurRepository.save(directeur);
         return new DirecteurDTO(directeur);
     }
 
     private boolean saveCheck(Directeur directeur) throws Exception {
         List<String> emptyFields = getEmptyFields(directeur);
-        if(!emptyFields.isEmpty()){
+        if (!emptyFields.isEmpty()) {
             throw new EmptyFieldsException(emptyFields, "directeur");
         }
-        if(directeurRepository.existsByEmail(directeur.getEmail())){
+        if (directeurRepository.existsByEmail(directeur.getEmail())) {
             throw new AlreadyExistsException(List.of("email"), "directeur");
         }
-        if(directeurRepository.existsByNomAndPrenom(directeur.getNom(), directeur.getPrenom())){
+        if (directeurRepository.existsByNomAndPrenom(directeur.getNom(), directeur.getPrenom())) {
             throw new AlreadyExistsException(List.of("nom", "prenom"), "directeur");
         }
         return true;
-    }
-
-    private static List<String> getEmptyFields(Directeur directeur) {
-        List<String> emptyFields = new java.util.ArrayList<>(List.of());
-        if(directeur.getNom() == null || directeur.getNom().isEmpty()){
-            emptyFields.add("nom");
-        }
-        if(directeur.getPrenom() == null || directeur.getPrenom().isEmpty()){
-            emptyFields.add("prenom");
-        }
-        if(directeur.getEmail() == null || directeur.getEmail().isEmpty()){
-            emptyFields.add("email");
-        }
-        if(directeur.getMotDePasse() == null || directeur.getMotDePasse().isEmpty()){
-            emptyFields.add("motDePasse");
-        }
-        return emptyFields;
     }
 
     @Override
@@ -66,13 +66,13 @@ public class DirecteurServiceImpl implements DirecteurService {
     @Override
     public DirecteurDTO read(Integer id) throws Exception {
         Optional<Directeur> t = directeurRepository.findById(id);
-        return new DirecteurDTO(t.orElseThrow(()->new NotExistsException(List.of("id"), "directeur")));
+        return new DirecteurDTO(t.orElseThrow(NotExistsException::new));
     }
 
     @Override
     public boolean update(Directeur directeur) throws Exception {
-        Directeur old = directeurRepository.findById(directeur.getId()).orElseThrow(()->new NotExistsException(List.of("id"), "directeur"));
-        if(!old.getNom().equals(directeur.getNom()) || !old.getPrenom().equals(directeur.getPrenom())){
+        Directeur old = directeurRepository.findById(directeur.getId()).orElseThrow(NotExistsException::new);
+        if (!old.getNom().equals(directeur.getNom()) || !old.getPrenom().equals(directeur.getPrenom())) {
             throw new UnAuthorizedUpdateException(List.of("nom", "prenom"), "directeur");
         }
         old.setAdresse(directeur.getAdresse());
@@ -81,7 +81,7 @@ public class DirecteurServiceImpl implements DirecteurService {
         old.setPrenom(directeur.getPrenom());
         old.setMotDePasse(directeur.getMotDePasse());
         old.setTelephone(directeur.getTelephone());
-        if(saveCheck(directeur)){
+        if (saveCheck(directeur)) {
             directeurRepository.save(old);
             return true;
         }
@@ -90,8 +90,8 @@ public class DirecteurServiceImpl implements DirecteurService {
 
     @Override
     public boolean delete(Integer id) throws Exception {
-        if(!directeurRepository.existsById(id)){
-            throw new NotExistsException(List.of("id"), "directeur");
+        if (!directeurRepository.existsById(id)) {
+            throw new NotExistsException();
         }
         directeurRepository.deleteById(id);
         return true;

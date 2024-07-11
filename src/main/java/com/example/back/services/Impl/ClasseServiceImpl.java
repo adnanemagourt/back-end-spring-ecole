@@ -62,13 +62,13 @@ public class ClasseServiceImpl implements ClasseService {
 
     @Override
     public LinkedClasseDTO read(Integer id) throws Exception {
-        Classe classe = classeRepository.findById(id).orElseThrow(() -> new NotExistsException(List.of("id"), "classe"));
+        Classe classe = classeRepository.findById(id).orElseThrow(NotExistsException::new);
         return new LinkedClasseDTO(classe);
     }
 
     @Override
     public void update(UnlinkedClasseDTO classedto) throws Exception {
-        Classe classe = classeRepository.findById(classedto.getId()).orElseThrow(() -> new NotExistsException(List.of("id"), "classe"));
+        Classe classe = classeRepository.findById(classedto.getId()).orElseThrow(NotExistsException::new);
         if (saveCheck(classedto)) {
             link(classe, classedto);
             classe.setNom(classedto.getNom());
@@ -79,7 +79,7 @@ public class ClasseServiceImpl implements ClasseService {
     @Override
     public boolean delete(Integer id) throws Exception {
         if (!classeRepository.existsById(id)) {
-            throw new NotExistsException(List.of("id"), "classe");
+            throw new NotExistsException();
         }
         classeRepository.deleteById(id);
         return true;
@@ -97,14 +97,14 @@ public class ClasseServiceImpl implements ClasseService {
 
     @Override
     public List<UnlinkedClasseDTO> findByProfesseurId(Integer professeurId) throws NotExistsException {
-        Professeur professeur = professeurRepository.findById(professeurId).orElseThrow(() -> new NotExistsException(List.of(), "professeur"));
+        Professeur professeur = professeurRepository.findById(professeurId).orElseThrow(NotExistsException::new);
         return DTOListMapper.mapUnlinkedClasse(professeur.getClasses());
     }
 
     private void link(Classe classe, UnlinkedClasseDTO classedto) throws AlreadyExistsException, NotExistsException {
         //link professeurs:
         List<Professeur> oldListProfesseurs = classe.getProfesseurs();
-        if(oldListProfesseurs != null) {
+        if (oldListProfesseurs != null) {
             for (Professeur professeur : oldListProfesseurs) {
                 if (!classedto.getProfesseurs().contains(professeur.getId())) {
                     professeur.removeClasse(classe);
@@ -114,21 +114,21 @@ public class ClasseServiceImpl implements ClasseService {
         }
         classe.setProfesseurs(new ArrayList<>());
         for (Integer professeurId : classedto.getProfesseurs()) {
-            Professeur professeur = professeurRepository.findById(professeurId).orElseThrow(() -> new NotExistsException(List.of(), "professeur"));
+            Professeur professeur = professeurRepository.findById(professeurId).orElseThrow(NotExistsException::new);
             if (classe.getProfesseurs().contains(professeur) && professeur.getClasses().contains(classe)) {
                 throw new AlreadyExistsException(List.of("classe_id", "professeur_id"), "classe_professeur");
             }
             classe.addProfesseur(professeur);
-            if(oldListProfesseurs != null && oldListProfesseurs.contains(professeur)) continue;
+            if (oldListProfesseurs != null && oldListProfesseurs.contains(professeur)) continue;
             professeur.addClasse(classe);
             professeurRepository.save(professeur);
         }
 
         //link etudiants:
         List<Etudiant> oldListEtudiants = classe.getEtudiants();
-        if(oldListEtudiants!=null){
-            for(Etudiant etudiant: oldListEtudiants){
-                if(!classedto.getEtudiants().contains(etudiant.getId())){
+        if (oldListEtudiants != null) {
+            for (Etudiant etudiant : oldListEtudiants) {
+                if (!classedto.getEtudiants().contains(etudiant.getId())) {
                     etudiant.setClasse(null);
                     etudiantRepository.save(etudiant);
                 }
@@ -136,12 +136,12 @@ public class ClasseServiceImpl implements ClasseService {
         }
         classe.setEtudiants(new ArrayList<>());
         for (Integer etudiantId : classedto.getEtudiants()) {
-            Etudiant etudiant = etudiantRepository.findById(etudiantId).orElseThrow(() -> new NotExistsException(List.of(), "etudiant"));
+            Etudiant etudiant = etudiantRepository.findById(etudiantId).orElseThrow(NotExistsException::new);
             if (classe.getEtudiants().contains(etudiant) && etudiant.getClasse() == classe) {
                 throw new AlreadyExistsException(List.of("classe_id", "etudiant_id"), "classe_etudiant");
             }
             classe.addEtudiant(etudiant);
-            if(oldListEtudiants!=null && oldListEtudiants.contains(etudiant)) continue;
+            if (oldListEtudiants != null && oldListEtudiants.contains(etudiant)) continue;
             etudiant.setClasse(classe);
             etudiantRepository.save(etudiant);
         }
@@ -149,19 +149,19 @@ public class ClasseServiceImpl implements ClasseService {
 
     @Override
     public List<UnlinkedProfesseurDTO> getProfesseursClasse(Integer id) throws NotExistsException {
-        Classe classe = classeRepository.findById(id).orElseThrow(() -> new NotExistsException(List.of(), "classe"));
+        Classe classe = classeRepository.findById(id).orElseThrow(NotExistsException::new);
         return DTOListMapper.mapUnlinkedProfesseur(classe.getProfesseurs());
     }
 
     @Override
     public List<UnlinkedEtudiantDTO> getEtudiantsClasse(Integer id) throws NotExistsException {
-        Classe classe = classeRepository.findById(id).orElseThrow(() -> new NotExistsException(List.of(), "classe"));
+        Classe classe = classeRepository.findById(id).orElseThrow(NotExistsException::new);
         return DTOListMapper.mapUnlinkedEtudiant(classe.getEtudiants());
     }
 
     @Override
     public LinkedClasseDTO findByEtudiantId(Integer id) throws NotExistsException {
-        Etudiant etudiant = etudiantRepository.findById(id).orElseThrow(() -> new NotExistsException(List.of(), "etudiant"));
+        Etudiant etudiant = etudiantRepository.findById(id).orElseThrow(NotExistsException::new);
         return new LinkedClasseDTO(etudiant.getClasse());
     }
 

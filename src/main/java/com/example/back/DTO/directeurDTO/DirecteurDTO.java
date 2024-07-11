@@ -2,8 +2,6 @@ package com.example.back.DTO.directeurDTO;
 
 import com.example.back.entities.Directeur;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 @Data
 public class DirecteurDTO {
@@ -33,7 +31,9 @@ public class DirecteurDTO {
     }
 
     public DirecteurDTO(Directeur directeur) {
-        if (directeur == null) {return;}
+        if (directeur == null) {
+            return;
+        }
         this.id = directeur.getId();
         this.nom = directeur.getNom();
         this.prenom = directeur.getPrenom();

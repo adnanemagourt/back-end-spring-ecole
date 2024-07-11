@@ -15,31 +15,10 @@ import java.util.List;
 @Builder
 @Table(name = "matiere")
 public class Matiere {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
-
     @Column(name = "nom")
     public String nom;
-
     @OneToMany(mappedBy = "matiere")
     public List<Professeur> professeurs;
-
-    public boolean addProfesseur(Professeur professeur) {
-        if (this.professeurs == null) {
-            this.professeurs = new ArrayList<>();
-        }
-        return this.professeurs.add(professeur);
-    }
-
-    public boolean removeProfesseur(Professeur professeur) {
-        if (this.professeurs != null) {
-            return this.professeurs.remove(professeur);
-        }
-        return false;
-    }
-
     @ManyToMany(
             cascade = CascadeType.ALL,
             fetch = FetchType.EAGER
@@ -56,6 +35,24 @@ public class Matiere {
             )
     )
     public List<Etudiant> etudiants;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
+
+    public boolean addProfesseur(Professeur professeur) {
+        if (this.professeurs == null) {
+            this.professeurs = new ArrayList<>();
+        }
+        return this.professeurs.add(professeur);
+    }
+
+    public boolean removeProfesseur(Professeur professeur) {
+        if (this.professeurs != null) {
+            return this.professeurs.remove(professeur);
+        }
+        return false;
+    }
 
     public boolean addEtudiant(Etudiant etudiant) {
         if (this.etudiants == null) {

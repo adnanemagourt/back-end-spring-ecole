@@ -1,27 +1,21 @@
 package com.example.back.DTO.professeurDTO;
 
-import com.example.back.entities.Matiere;
 import com.example.back.entities.Professeur;
-import lombok.*;
+import lombok.Data;
 
 @Data
 public class ProfesseurDTO {
 
-    private Integer id;
-
     public String nom;
-
     public String prenom;
-
     public String email;
-
+    public String adresse;
+    public String telephone;
+    private Integer id;
     private String motDePasse;
 
-    public String adresse;
-
-    public String telephone;
-
-    public ProfesseurDTO() {}
+    public ProfesseurDTO() {
+    }
 
     public ProfesseurDTO(Integer id, String nom, String prenom, String email, String motDePasse, String adresse, String telephone) {
         this.id = id;
@@ -34,7 +28,9 @@ public class ProfesseurDTO {
     }
 
     public ProfesseurDTO(Professeur professeur) {
-        if(professeur == null){return;}
+        if (professeur == null) {
+            return;
+        }
         this.id = professeur.getId();
         this.nom = professeur.getNom();
         this.prenom = professeur.getPrenom();

@@ -4,8 +4,6 @@ import com.example.back.DTO.classeDTO.UnlinkedClasseDTO;
 import com.example.back.DTO.matiereDTO.LinkedMatiereDTO;
 import com.example.back.DTO.professeurDTO.LinkedProfesseurDTO;
 import com.example.back.DTO.professeurDTO.UnlinkedProfesseurDTO;
-import com.example.back.entities.Classe;
-import com.example.back.entities.Matiere;
 import com.example.back.exceptions.NotExistsException;
 
 import java.util.List;

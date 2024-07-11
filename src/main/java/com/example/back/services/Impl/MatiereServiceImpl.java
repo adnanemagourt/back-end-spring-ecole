@@ -73,13 +73,13 @@ public class MatiereServiceImpl implements MatiereService {
     @Override
     public LinkedMatiereDTO read(Integer id) throws Exception {
         Optional<Matiere> t = matiereRepository.findById(id);
-        return new LinkedMatiereDTO(t.orElseThrow(() -> new NotExistsException(List.of("id"), "matiere")));
+        return new LinkedMatiereDTO(t.orElseThrow(NotExistsException::new));
     }
 
     @Override
     public boolean delete(Integer id) throws Exception {
         if (!matiereRepository.existsById(id)) {
-            throw new NotExistsException(List.of("id"), "matiere");
+            throw new NotExistsException();
         }
         matiereRepository.deleteById(id);
         return true;
@@ -93,16 +93,16 @@ public class MatiereServiceImpl implements MatiereService {
 
     @Override
     public List<UnlinkedEtudiantDTO> getEtudiantsMatiere(Integer id) throws NotExistsException {
-        Matiere matiere = matiereRepository.findById(id).orElseThrow(() -> new NotExistsException(List.of(), "matiere"));
+        Matiere matiere = matiereRepository.findById(id).orElseThrow(NotExistsException::new);
         return DTOListMapper.mapUnlinkedEtudiant(matiere.getEtudiants());
     }
 
     private void link(Matiere matiere, UnlinkedMatiereDTO matieredto) throws AlreadyExistsException, NotExistsException {
         //link etudiants
         List<Etudiant> oldListEtudiants = matiere.getEtudiants();
-        if(oldListEtudiants != null){
-            for(Etudiant etudiant : oldListEtudiants){
-                if(!matieredto.getEtudiants().contains(etudiant.getId())){
+        if (oldListEtudiants != null) {
+            for (Etudiant etudiant : oldListEtudiants) {
+                if (!matieredto.getEtudiants().contains(etudiant.getId())) {
                     etudiant.removeMatiere(matiere);
                     etudiantRepository.save(etudiant);
                 }
@@ -110,21 +110,21 @@ public class MatiereServiceImpl implements MatiereService {
         }
         matiere.setEtudiants(new ArrayList<>());
         for (Integer etudiantId : matieredto.getEtudiants()) {
-            Etudiant etudiant = etudiantRepository.findById(etudiantId).orElseThrow(() -> new NotExistsException(List.of(), "etudiant"));
+            Etudiant etudiant = etudiantRepository.findById(etudiantId).orElseThrow(NotExistsException::new);
             if (matiere.getEtudiants().contains(etudiant) && etudiant.getMatieres().contains(matiere)) {
                 throw new AlreadyExistsException(List.of("etudiant_id", "matiere_id"), "etudiant_matiere");
             }
             matiere.addEtudiant(etudiant);
-            if(oldListEtudiants != null && oldListEtudiants.contains(etudiant)) continue;
+            if (oldListEtudiants != null && oldListEtudiants.contains(etudiant)) continue;
             etudiant.addMatiere(matiere);
             etudiantRepository.save(etudiant);
         }
 
         //link professeurs
         List<Professeur> oldListProfesseurs = matiere.getProfesseurs();
-        if(oldListProfesseurs != null){
-            for(Professeur professeur : oldListProfesseurs){
-                if(!matieredto.getProfesseurs().contains(professeur.getId())){
+        if (oldListProfesseurs != null) {
+            for (Professeur professeur : oldListProfesseurs) {
+                if (!matieredto.getProfesseurs().contains(professeur.getId())) {
                     professeur.setMatiere(null);
                     professeurRepository.save(professeur);
                 }
@@ -132,12 +132,12 @@ public class MatiereServiceImpl implements MatiereService {
         }
         matiere.setProfesseurs(new ArrayList<>());
         for (Integer professeurId : matieredto.getProfesseurs()) {
-            Professeur professeur = professeurRepository.findById(professeurId).orElseThrow(() -> new NotExistsException(List.of(), "professeur"));
+            Professeur professeur = professeurRepository.findById(professeurId).orElseThrow(NotExistsException::new);
             if (matiere.getProfesseurs().contains(professeur) && professeur.getMatiere() == matiere) {
                 throw new AlreadyExistsException(List.of("professeur_id", "matiere_id"), "professeur_matiere");
             }
             matiere.addProfesseur(professeur);
-            if(oldListProfesseurs != null && oldListProfesseurs.contains(professeur)) continue;
+            if (oldListProfesseurs != null && oldListProfesseurs.contains(professeur)) continue;
             professeur.setMatiere(matiere);
             professeurRepository.save(professeur);
         }
@@ -145,7 +145,7 @@ public class MatiereServiceImpl implements MatiereService {
 
     @Override
     public List<UnlinkedProfesseurDTO> getProfesseursMatiere(Integer id) throws NotExistsException {
-        Matiere matiere = matiereRepository.findById(id).orElseThrow(() -> new NotExistsException(List.of(), "matiere"));
+        Matiere matiere = matiereRepository.findById(id).orElseThrow(NotExistsException::new);
         return DTOListMapper.mapUnlinkedProfesseur(matiere.getProfesseurs());
     }
 

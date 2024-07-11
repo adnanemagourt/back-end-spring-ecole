@@ -1,15 +1,10 @@
 package com.example.back.DTO.classeDTO;
 
 import com.example.back.DTO.DTOListMapper;
-import com.example.back.DTO.etudiantDTO.EtudiantDTO;
 import com.example.back.DTO.etudiantDTO.UnlinkedEtudiantDTO;
-import com.example.back.DTO.professeurDTO.ProfesseurDTO;
 import com.example.back.DTO.professeurDTO.UnlinkedProfesseurDTO;
 import com.example.back.entities.Classe;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 

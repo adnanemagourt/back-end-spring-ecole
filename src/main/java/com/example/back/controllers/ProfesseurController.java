@@ -28,11 +28,9 @@ public class ProfesseurController {
     public ResponseEntity<ProfesseurDTO> login(@RequestBody ProfesseurDTO professeur) throws Exception {
         ProfesseurDTO found = professeurService.getByEmail(professeur.getEmail());
         if (found == null) {
-            //return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             throw new Exception("not found");
         }
         if (!Objects.equals(found.getMotDePasse(), professeur.getMotDePasse())) {
-            //return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
             throw new Exception("wrong password");
         }
         return new ResponseEntity<>(found, HttpStatus.OK);
@@ -94,14 +92,14 @@ public class ProfesseurController {
 
     // get classes of professeur
     @GetMapping(path = "/{id}/classes")
-    public ResponseEntity<List<UnlinkedClasseDTO>> getClassesOfProfesseur(@PathVariable("id")Integer id) throws NotExistsException {
+    public ResponseEntity<List<UnlinkedClasseDTO>> getClassesOfProfesseur(@PathVariable("id") Integer id) throws NotExistsException {
         List<UnlinkedClasseDTO> classes = professeurService.findProfesseurClasses(id);
         return new ResponseEntity<>(classes, HttpStatus.OK);
     }
 
     //get matiere of professeur
     @GetMapping(path = "/{id}/matiere")
-    public ResponseEntity<LinkedMatiereDTO> getMatiereOfProfesseur(@PathVariable("id")Integer id) throws NotExistsException {
+    public ResponseEntity<LinkedMatiereDTO> getMatiereOfProfesseur(@PathVariable("id") Integer id) throws NotExistsException {
         LinkedMatiereDTO matiere = professeurService.findProfesseurMatiere(id);
         return new ResponseEntity<>(matiere, HttpStatus.OK);
     }

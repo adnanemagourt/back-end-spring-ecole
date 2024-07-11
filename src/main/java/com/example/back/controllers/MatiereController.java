@@ -1,14 +1,10 @@
 package com.example.back.controllers;
 
-import com.example.back.DTO.etudiantDTO.EtudiantDTO;
 import com.example.back.DTO.etudiantDTO.UnlinkedEtudiantDTO;
 import com.example.back.DTO.matiereDTO.LinkedMatiereDTO;
 import com.example.back.DTO.matiereDTO.MatiereDTO;
 import com.example.back.DTO.matiereDTO.UnlinkedMatiereDTO;
-import com.example.back.DTO.professeurDTO.ProfesseurDTO;
 import com.example.back.DTO.professeurDTO.UnlinkedProfesseurDTO;
-import com.example.back.entities.Matiere;
-import com.example.back.exceptions.AlreadyExistsException;
 import com.example.back.exceptions.NotExistsException;
 import com.example.back.services.MatiereService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -4,8 +4,6 @@ import com.example.back.DTO.DTOListMapper;
 import com.example.back.entities.Matiere;
 import com.example.back.entities.Professeur;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 import java.util.List;
 
@@ -24,9 +22,11 @@ public class UnlinkedProfesseurDTO extends ProfesseurDTO {
 
     public UnlinkedProfesseurDTO(Professeur professeur) {
         super(professeur);
-        if(professeur == null){return;}
+        if (professeur == null) {
+            return;
+        }
         Matiere matiere = professeur.getMatiere();
-        this.matiere_id = matiere == null ? null : matiere.getId() ;
+        this.matiere_id = matiere == null ? null : matiere.getId();
         this.classes = DTOListMapper.mapClasseIds(professeur.getClasses());
     }
 
