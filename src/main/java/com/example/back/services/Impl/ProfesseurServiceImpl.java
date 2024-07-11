@@ -112,13 +112,13 @@ public class ProfesseurServiceImpl implements ProfesseurService {
 
         saveCheck(professeurdto);
 
+        linkClasses(oldProfesseur, professeurdto);
+        linkMatiere(oldProfesseur, professeurdto);
+
         oldProfesseur.setEmail(professeurdto.getEmail());
         oldProfesseur.setMotDePasse(professeurdto.getMotDePasse());
         oldProfesseur.setTelephone(professeurdto.getTelephone());
         oldProfesseur.setAdresse(professeurdto.getAdresse());
-
-        linkMatiere(oldProfesseur, professeurdto);
-        linkClasses(oldProfesseur, professeurdto);
 
         professeurRepository.save(oldProfesseur);
         return true;
@@ -158,6 +158,15 @@ public class ProfesseurServiceImpl implements ProfesseurService {
     }
 
     private void linkClasses(Professeur professeur, UnlinkedProfesseurDTO professeurDTO) throws NotExistsException, AlreadyExistsException {
+        List<Classe> oldListClasses = professeur.getClasses();
+        if (oldListClasses != null) {
+            for (Classe classe : oldListClasses) {
+                if (!professeurDTO.getClasses().contains(classe.getId())) {
+                    classe.removeProfesseur(professeur);
+                    classeRepository.save(classe);
+                }
+            }
+        }
         professeur.setClasses(new ArrayList<>());
         for (Integer classeId : professeurDTO.getClasses()) {
             Classe classe = classeRepository.findById(classeId).orElseThrow(() -> new NotExistsException(List.of(), "classe"));
@@ -165,6 +174,7 @@ public class ProfesseurServiceImpl implements ProfesseurService {
                 throw new AlreadyExistsException(List.of("professeur_id", "classe_id"), "professeur_classe");
             }
             professeur.addClasse(classe);
+            if (oldListClasses != null && oldListClasses.contains(classe)) continue;
             classe.addProfesseur(professeur);
             classeRepository.save(classe);
         }
@@ -188,12 +198,12 @@ public class ProfesseurServiceImpl implements ProfesseurService {
             Integer oldMatiereId = unlinkMatiere(oldProfesseur);
 
             oldProfesseur.setMatiere(matiere);
-            if(!oldMatiereId.equals(matiere.getId()) || oldMatiereId == -1) matiere.addProfesseur(oldProfesseur);
+            if (!oldMatiereId.equals(matiere.getId()) || oldMatiereId == -1) matiere.addProfesseur(oldProfesseur);
             matiereRepository.save(matiere);
         }
     }
 
-    private Integer unlinkMatiere(Professeur professeur) throws NotExistsException {
+    private Integer unlinkMatiere(Professeur professeur) {
         Matiere matiere = professeur.getMatiere();
 
         if (matiere == null || !matiere.getProfesseurs().contains(professeur)) {

@@ -98,14 +98,14 @@ public class EtudiantServiceImpl implements EtudiantService {
 
         saveCheck(etudiantdto);
 
+        linkMatieres(oldEtudiant, etudiantdto);
+        linkClasse(oldEtudiant, etudiantdto);
+
         oldEtudiant.setEmail(etudiantdto.getEmail());
         oldEtudiant.setMotDePasse(etudiantdto.getMotDePasse());
         oldEtudiant.setTelephone(etudiantdto.getTelephone());
         oldEtudiant.setAdresse(etudiantdto.getAdresse());
         oldEtudiant.setDateNaissance(etudiantdto.getDateNaissance());
-
-        linkMatieres(oldEtudiant, etudiantdto);
-        linkClasse(oldEtudiant, etudiantdto);
 
         etudiantRepository.save(oldEtudiant);
         return true;
@@ -168,6 +168,15 @@ public class EtudiantServiceImpl implements EtudiantService {
     }
 
     private void linkMatieres(Etudiant etudiant, UnlinkedEtudiantDTO etudiantDTO) throws AlreadyExistsException, NotExistsException {
+        List<Matiere> oldListMatiere = etudiant.getMatieres();
+        if(oldListMatiere!=null){
+            for(Matiere matiere: oldListMatiere){
+                if(!etudiantDTO.getMatieres().contains(matiere.getId())){
+                    matiere.removeEtudiant(etudiant);
+                    matiereRepository.save(matiere);
+                }
+            }
+        }
         etudiant.setMatieres(new ArrayList<>());
         for (Integer matiereId : etudiantDTO.getMatieres()) {
             Matiere matiere = matiereRepository.findById(matiereId).orElseThrow(() -> new NotExistsException(List.of(), "matiere"));
@@ -175,6 +184,7 @@ public class EtudiantServiceImpl implements EtudiantService {
                 throw new AlreadyExistsException(List.of("etudiant_id", "matiere_id"), "etudiant_matiere");
             }
             etudiant.addMatiere(matiere);
+            if(oldListMatiere!=null && oldListMatiere.contains(matiere)) continue;
             matiere.addEtudiant(etudiant);
             matiereRepository.save(matiere);
         }

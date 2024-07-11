@@ -70,8 +70,8 @@ public class ClasseServiceImpl implements ClasseService {
     public void update(UnlinkedClasseDTO classedto) throws Exception {
         Classe classe = classeRepository.findById(classedto.getId()).orElseThrow(() -> new NotExistsException(List.of("id"), "classe"));
         if (saveCheck(classedto)) {
-            classe.setNom(classedto.getNom());
             link(classe, classedto);
+            classe.setNom(classedto.getNom());
             classeRepository.save(classe);
         }
     }
@@ -103,6 +103,15 @@ public class ClasseServiceImpl implements ClasseService {
 
     private void link(Classe classe, UnlinkedClasseDTO classedto) throws AlreadyExistsException, NotExistsException {
         //link professeurs:
+        List<Professeur> oldListProfesseurs = classe.getProfesseurs();
+        if(oldListProfesseurs != null) {
+            for (Professeur professeur : oldListProfesseurs) {
+                if (!classedto.getProfesseurs().contains(professeur.getId())) {
+                    professeur.removeClasse(classe);
+                    professeurRepository.save(professeur);
+                }
+            }
+        }
         classe.setProfesseurs(new ArrayList<>());
         for (Integer professeurId : classedto.getProfesseurs()) {
             Professeur professeur = professeurRepository.findById(professeurId).orElseThrow(() -> new NotExistsException(List.of(), "professeur"));
@@ -110,11 +119,21 @@ public class ClasseServiceImpl implements ClasseService {
                 throw new AlreadyExistsException(List.of("classe_id", "professeur_id"), "classe_professeur");
             }
             classe.addProfesseur(professeur);
+            if(oldListProfesseurs != null && oldListProfesseurs.contains(professeur)) continue;
             professeur.addClasse(classe);
             professeurRepository.save(professeur);
         }
 
         //link etudiants:
+        List<Etudiant> oldListEtudiants = classe.getEtudiants();
+        if(oldListEtudiants!=null){
+            for(Etudiant etudiant: oldListEtudiants){
+                if(!classedto.getEtudiants().contains(etudiant.getId())){
+                    etudiant.setClasse(null);
+                    etudiantRepository.save(etudiant);
+                }
+            }
+        }
         classe.setEtudiants(new ArrayList<>());
         for (Integer etudiantId : classedto.getEtudiants()) {
             Etudiant etudiant = etudiantRepository.findById(etudiantId).orElseThrow(() -> new NotExistsException(List.of(), "etudiant"));
@@ -122,6 +141,7 @@ public class ClasseServiceImpl implements ClasseService {
                 throw new AlreadyExistsException(List.of("classe_id", "etudiant_id"), "classe_etudiant");
             }
             classe.addEtudiant(etudiant);
+            if(oldListEtudiants!=null && oldListEtudiants.contains(etudiant)) continue;
             etudiant.setClasse(classe);
             etudiantRepository.save(etudiant);
         }

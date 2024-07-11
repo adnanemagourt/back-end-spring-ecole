@@ -49,8 +49,8 @@ public class MatiereServiceImpl implements MatiereService {
     public void update(UnlinkedMatiereDTO matieredto) throws Exception {
         Matiere oldMatiere = matiereRepository.findById(matieredto.getId()).orElseThrow(() -> new Exception("matiere id n'existe pas"));
         if (saveCheck(matieredto)) {
-            oldMatiere.setNom(matieredto.getNom());
             link(oldMatiere, matieredto);
+            oldMatiere.setNom(matieredto.getNom());
             matiereRepository.save(oldMatiere);
         }
     }
@@ -99,6 +99,15 @@ public class MatiereServiceImpl implements MatiereService {
 
     private void link(Matiere matiere, UnlinkedMatiereDTO matieredto) throws AlreadyExistsException, NotExistsException {
         //link etudiants
+        List<Etudiant> oldListEtudiants = matiere.getEtudiants();
+        if(oldListEtudiants != null){
+            for(Etudiant etudiant : oldListEtudiants){
+                if(!matieredto.getEtudiants().contains(etudiant.getId())){
+                    etudiant.removeMatiere(matiere);
+                    etudiantRepository.save(etudiant);
+                }
+            }
+        }
         matiere.setEtudiants(new ArrayList<>());
         for (Integer etudiantId : matieredto.getEtudiants()) {
             Etudiant etudiant = etudiantRepository.findById(etudiantId).orElseThrow(() -> new NotExistsException(List.of(), "etudiant"));
@@ -106,19 +115,30 @@ public class MatiereServiceImpl implements MatiereService {
                 throw new AlreadyExistsException(List.of("etudiant_id", "matiere_id"), "etudiant_matiere");
             }
             matiere.addEtudiant(etudiant);
+            if(oldListEtudiants != null && oldListEtudiants.contains(etudiant)) continue;
             etudiant.addMatiere(matiere);
             etudiantRepository.save(etudiant);
         }
 
-        //link professeurs:
+        //link professeurs
+        List<Professeur> oldListProfesseurs = matiere.getProfesseurs();
+        if(oldListProfesseurs != null){
+            for(Professeur professeur : oldListProfesseurs){
+                if(!matieredto.getProfesseurs().contains(professeur.getId())){
+                    professeur.setMatiere(null);
+                    professeurRepository.save(professeur);
+                }
+            }
+        }
         matiere.setProfesseurs(new ArrayList<>());
         for (Integer professeurId : matieredto.getProfesseurs()) {
             Professeur professeur = professeurRepository.findById(professeurId).orElseThrow(() -> new NotExistsException(List.of(), "professeur"));
             if (matiere.getProfesseurs().contains(professeur) && professeur.getMatiere() == matiere) {
                 throw new AlreadyExistsException(List.of("professeur_id", "matiere_id"), "professeur_matiere");
             }
-            professeur.setMatiere(matiere);
             matiere.addProfesseur(professeur);
+            if(oldListProfesseurs != null && oldListProfesseurs.contains(professeur)) continue;
+            professeur.setMatiere(matiere);
             professeurRepository.save(professeur);
         }
     }
